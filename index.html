@@ -3,36 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BLACK RNDR — Dari: Rahime Cube (Solara 123) · Interactive 3D Playable Walkthrough</title>
+  <title>BLACK RNDR — Dari: Rahime Cube (Solara 123) | Photoreal 3D Point-Cloud & Depth Engine</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-obsidian: #09090b;
-      --panel-bg: rgba(14, 14, 17, 0.84);
-      --panel-border: rgba(232, 228, 220, 0.14);
-      --text-bone: #F2EFE9;
-      --text-muted: #9E9A90;
+      --bg-obsidian: #070709;
+      --panel-bg: rgba(10, 10, 14, 0.84);
+      --panel-border: rgba(212, 175, 122, 0.26);
       --accent-brass: #D4AF7A;
-      --accent-emerald: #34D399;
-      --accent-amber: #F59E0B;
-      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --accent-emerald: #2DD4BF;
+      --text-bone: #F5F2EB;
+      --text-muted: #9E9A90;
       --font-display: 'Syne', sans-serif;
+      --font-sans: 'Inter', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
     html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
+      width: 100%; height: 100%; overflow: hidden;
       background: var(--bg-obsidian);
       color: var(--text-bone);
       font-family: var(--font-sans);
@@ -40,556 +31,283 @@
     }
 
     #canvas-container {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
+      position: fixed; inset: 0; z-index: 1;
       cursor: grab;
     }
-    #canvas-container:active {
-      cursor: grabbing;
-    }
-
-    /* Blueprint 2D Overlay Grid & Dimensions */
-    #blueprint-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      background-image:
-        linear-gradient(rgba(212, 175, 122, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(212, 175, 122, 0.06) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-    #blueprint-overlay.active {
-      opacity: 1;
-    }
-
-    .bp-callout {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #F2EFE9;
-      background: rgba(9, 9, 11, 0.88);
-      border: 1px solid rgba(212, 175, 122, 0.55);
-      padding: 5px 10px;
-      border-radius: 4px;
-      white-space: nowrap;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-    }
-    .bp-callout span {
-      color: var(--accent-brass);
-      font-weight: 600;
-    }
+    #canvas-container:active { cursor: grabbing; }
 
     /* Top Header Bar */
     .top-bar {
-      position: fixed;
-      top: 16px;
-      left: 16px;
-      right: 16px;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      pointer-events: none;
+      position: fixed; top: 14px; left: 16px; right: 16px; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; pointer-events: none;
     }
-
-    .brand-pill {
+    .brand-pill, .mode-switcher {
       pointer-events: auto;
-      display: flex;
-      align-items: center;
-      gap: 14px;
       background: var(--panel-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--panel-border);
-      padding: 10px 18px;
       border-radius: 12px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      padding: 9px 15px;
+      display: flex; align-items: center; gap: 14px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.55);
     }
-
     .brand-mark {
       font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 14px;
-      letter-spacing: 0.14em;
+      font-weight: 800; font-size: 14px; letter-spacing: 0.14em;
       color: var(--text-bone);
       padding-right: 12px;
-      border-right: 1px solid var(--panel-border);
+      border-right: 1px solid rgba(255, 255, 255, 0.14);
     }
-
-    .project-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .project-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-bone);
-      letter-spacing: 0.01em;
-    }
+    .project-meta { display: flex; flex-direction: column; gap: 2px; }
+    .project-title { font-size: 13px; font-weight: 600; color: var(--text-bone); }
     .project-sub {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--accent-brass);
-      letter-spacing: 0.06em;
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--accent-brass); letter-spacing: 0.06em;
     }
 
-    /* View Mode Switcher */
-    .mode-switcher {
-      pointer-events: auto;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--panel-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--panel-border);
-      padding: 5px;
-      border-radius: 12px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-    }
-
+    /* Mode Switcher */
+    .mode-switcher { padding: 5px; gap: 5px; }
     .mode-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      transition: all 0.2s ease;
+      background: transparent; border: 1px solid transparent;
+      color: var(--text-muted); font-family: var(--font-sans);
+      font-size: 12px; font-weight: 500;
+      padding: 8px 13px; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s ease;
+      display: flex; align-items: center; gap: 7px;
     }
-    .mode-btn:hover {
-      color: var(--text-bone);
-      background: rgba(255, 255, 255, 0.05);
-    }
+    .mode-btn:hover { color: var(--text-bone); background: rgba(255, 255, 255, 0.06); }
     .mode-btn.active {
       background: rgba(212, 175, 122, 0.18);
-      border-color: rgba(212, 175, 122, 0.5);
+      border-color: var(--accent-brass);
       color: var(--text-bone);
+      box-shadow: 0 0 18px rgba(212, 175, 122, 0.22);
     }
-    .mode-btn .key-hint {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      padding: 1px 5px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--accent-brass);
+    .key-hint {
+      font-family: var(--font-mono); font-size: 10px;
+      padding: 1px 5px; border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1); color: var(--accent-brass);
     }
 
-    /* Left Room Navigation Sidebar */
+    /* Left Navigation Panel */
     .room-nav {
-      position: fixed;
-      left: 16px;
-      top: 86px;
-      z-index: 10;
-      width: 245px;
-      background: var(--panel-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      position: fixed; left: 16px; top: 82px; z-index: 20;
+      width: 248px; background: var(--panel-bg);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--panel-border);
-      border-radius: 14px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      border-radius: 14px; padding: 12px;
+      display: flex; flex-direction: column; gap: 6px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.55);
     }
-
     .nav-section-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      padding: 2px 6px 6px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      margin-bottom: 2px;
-      display: flex;
-      justify-content: space-between;
+      font-family: var(--font-mono); font-size: 10px;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--text-muted); padding: 2px 6px 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 2px; display: flex; justify-content: space-between;
     }
-
     .room-btn {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 9px;
-      padding: 8px 10px;
-      color: var(--text-bone);
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 9px; padding: 8px 10px;
+      color: var(--text-bone); cursor: pointer;
+      text-align: left; transition: all 0.2s ease;
+      display: flex; align-items: center; gap: 10px;
     }
     .room-btn:hover {
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(212, 175, 122, 0.12);
       border-color: rgba(212, 175, 122, 0.35);
       transform: translateX(2px);
     }
     .room-btn.active {
-      background: rgba(212, 175, 122, 0.16);
+      background: rgba(212, 175, 122, 0.2);
       border-color: var(--accent-brass);
     }
-    .room-idx {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--accent-brass);
-      background: rgba(212, 175, 122, 0.12);
-      padding: 4px 6px;
-      border-radius: 5px;
-      font-weight: 600;
+    .room-thumb {
+      width: 42px; height: 32px; border-radius: 5px;
+      object-fit: cover; border: 1px solid rgba(255,255,255,0.18);
+      flex-shrink: 0;
     }
-    .room-info {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-    }
-    .room-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-bone);
-    }
-    .room-Zone {
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      color: var(--text-muted);
-    }
+    .room-info { display: flex; flex-direction: column; gap: 1px; }
+    .room-name { font-size: 12px; font-weight: 600; color: var(--text-bone); }
+    .room-zone { font-family: var(--font-mono); font-size: 9.5px; color: var(--text-muted); }
 
-    /* Controls Help Box inside Left Sidebar */
     .walk-help {
-      margin-top: 6px;
-      padding: 9px 10px;
+      margin-top: 6px; padding: 9px 10px;
       background: rgba(255, 255, 255, 0.03);
-      border: 1px dashed rgba(212, 175, 122, 0.3);
-      border-radius: 8px;
-      font-size: 11px;
-      line-height: 1.45;
+      border: 1px dashed rgba(212, 175, 122, 0.32);
+      border-radius: 8px; font-size: 11px; line-height: 1.48;
       color: var(--text-muted);
     }
     .walk-help strong {
-      color: var(--accent-brass);
-      font-family: var(--font-mono);
-      font-size: 10.5px;
+      color: var(--accent-brass); font-family: var(--font-mono); font-size: 10.5px;
     }
 
-    /* Right Reference Render Card */
+    /* Right Engine Control & Depth Preview Card */
     .ref-card {
-      position: fixed;
-      right: 16px;
-      top: 86px;
-      z-index: 10;
-      width: 300px;
-      background: var(--panel-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      position: fixed; right: 16px; top: 82px; z-index: 20;
+      width: 288px; background: var(--panel-bg);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--panel-border);
-      border-radius: 14px;
-      padding: 12px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      border-radius: 14px; padding: 12px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.55);
+      display: flex; flex-direction: column; gap: 10px;
     }
-
-    .ref-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    .ref-header { display: flex; align-items: center; justify-content: space-between; }
     .ref-badge {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      font-family: var(--font-mono); font-size: 10px;
+      text-transform: uppercase; letter-spacing: 0.08em;
       color: var(--accent-emerald);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      display: flex; align-items: center; gap: 6px;
     }
     .ref-badge::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent-emerald);
-      box-shadow: 0 0 8px var(--accent-emerald);
+      content: ""; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald);
     }
 
-    .ref-img-wrap {
-      position: relative;
-      width: 100%;
-      height: 172px;
-      border-radius: 9px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: #121215;
-      cursor: pointer;
+    .slider-box {
+      display: flex; flex-direction: column; gap: 6px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 9px 10px; border-radius: 9px;
     }
-    .ref-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.35s ease;
+    .slider-head {
+      display: flex; justify-content: space-between;
+      font-family: var(--font-mono); font-size: 10px; color: var(--text-bone);
     }
-    .ref-img-wrap:hover img {
-      transform: scale(1.04);
-    }
-    .ref-img-tag {
-      position: absolute;
-      bottom: 8px;
-      left: 8px;
-      right: 8px;
-      background: rgba(9, 9, 11, 0.82);
-      backdrop-filter: blur(8px);
-      padding: 5px 8px;
-      border-radius: 6px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-bone);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .slider-head span:last-child { color: var(--accent-brass); }
+    input[type="range"] {
+      width: 100%; accent-color: var(--accent-brass);
+      cursor: pointer; height: 5px;
     }
 
-    .compare-cta {
-      width: 100%;
-      background: linear-gradient(135deg, rgba(212, 175, 122, 0.22), rgba(212, 175, 122, 0.08));
-      border: 1px solid rgba(212, 175, 122, 0.55);
-      color: var(--text-bone);
-      font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 9px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s ease;
+    .depth-mini-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
     }
-    .compare-cta:hover {
-      background: rgba(212, 175, 122, 0.32);
+    .mini-box {
+      position: relative; height: 82px; border-radius: 7px;
+      overflow: hidden; border: 1px solid rgba(255,255,255,0.14);
+      background: #101014;
+    }
+    .mini-box img { width: 100%; height: 100%; object-fit: cover; }
+    .mini-tag {
+      position: absolute; bottom: 4px; left: 4px; right: 4px;
+      background: rgba(7, 7, 9, 0.82); padding: 2px 5px;
+      border-radius: 4px; font-family: var(--font-mono);
+      font-size: 8.5px; color: var(--text-bone); text-align: center;
+    }
+
+    .action-btn {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(212, 175, 122, 0.24), rgba(45, 212, 191, 0.12));
+      border: 1px solid var(--accent-brass);
+      color: var(--text-bone); font-family: var(--font-sans);
+      font-size: 11.5px; font-weight: 600;
+      padding: 9px 12px; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s ease;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+    }
+    .action-btn:hover {
+      background: rgba(212, 175, 122, 0.34);
       transform: translateY(-1px);
     }
 
-    .thumb-strip {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 5px;
+    /* 3D Spatial Portal Hotspots */
+    #hotspots-layer {
+      position: fixed; inset: 0; pointer-events: none; z-index: 12;
     }
-    .thumb-item {
-      height: 36px;
-      border-radius: 5px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+    .portal-hotspot {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      background: rgba(9, 9, 13, 0.84);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid var(--accent-brass);
+      color: var(--text-bone);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      display: flex; align-items: center; gap: 7px;
       cursor: pointer;
-      opacity: 0.6;
-      transition: all 0.2s ease;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.65), 0 0 16px rgba(212, 175, 122, 0.35);
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     }
-    .thumb-item:hover, .thumb-item.active {
-      opacity: 1;
-      border-color: var(--accent-brass);
-      transform: scale(1.04);
+    .portal-hotspot:hover {
+      transform: translate(-50%, -50%) scale(1.08);
+      background: rgba(212, 175, 122, 0.25);
+      border-color: var(--accent-emerald);
     }
-    .thumb-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .portal-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 10px var(--accent-emerald);
+      animation: pulseDot 1.6s infinite ease-in-out;
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.65; }
     }
 
     /* Bottom Configurator Dock */
     .bottom-dock {
-      position: fixed;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
+      position: fixed; bottom: 16px; left: 50%;
+      transform: translateX(-50%); z-index: 20;
       background: var(--panel-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--panel-border);
-      border-radius: 14px;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+      border-radius: 16px; padding: 10px 16px;
+      display: flex; align-items: center; gap: 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
       white-space: nowrap;
     }
-
-    .dock-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .dock-divider {
-      width: 1px;
-      height: 28px;
-      background: var(--panel-border);
-    }
+    .dock-group { display: flex; align-items: center; gap: 7px; }
+    .dock-divider { width: 1px; height: 26px; background: rgba(255, 255, 255, 0.12); }
     .dock-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      margin-right: 4px;
+      font-family: var(--font-mono); font-size: 10px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-muted); margin-right: 2px;
     }
-
     .pill-btn {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-bone);
-      font-size: 11.5px;
-      font-weight: 500;
-      padding: 6px 11px;
-      border-radius: 7px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      color: var(--text-bone); font-family: var(--font-sans);
+      font-size: 11.5px; font-weight: 500;
+      padding: 6px 11px; border-radius: 8px;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
       transition: all 0.2s ease;
     }
-    .pill-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
+    .pill-btn:hover { background: rgba(255, 255, 255, 0.1); }
     .pill-btn.active {
-      background: rgba(212, 175, 122, 0.2);
-      border-color: var(--accent-brass);
-      color: var(--text-bone);
+      background: rgba(212, 175, 122, 0.22);
+      border-color: var(--accent-brass); color: #fff;
     }
-
     .swatch-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.4);
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.4);
     }
 
-    /* Fullscreen Split Compare Modal Overlay */
-    #compare-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 25;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+    /* 2D Blueprint Overlay Callouts */
+    #blueprint-overlay {
+      position: fixed; inset: 0; pointer-events: none; z-index: 11;
+      opacity: 0; transition: opacity 0.35s ease;
     }
-    #compare-overlay.active {
-      pointer-events: auto;
-      opacity: 1;
-    }
-    #compare-render-layer {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      clip-path: inset(0 0 0 50%);
-    }
-    #compare-handle {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 3px;
-      background: var(--accent-brass);
-      transform: translateX(-50%);
-      cursor: ew-resize;
-      box-shadow: 0 0 20px rgba(0,0,0,0.8);
-    }
-    .handle-knob {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--bg-obsidian);
-      border: 2px solid var(--accent-brass);
-      color: var(--accent-brass);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 700;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-    }
-    .compare-label-left, .compare-label-right {
-      position: absolute;
-      top: 90px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      background: rgba(9, 9, 11, 0.85);
-      border: 1px solid var(--panel-border);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .compare-label-left {
-      left: 280px;
-      color: var(--accent-brass);
-    }
-    .compare-label-right {
-      right: 330px;
-      color: var(--accent-emerald);
-    }
-    .close-compare-btn {
-      position: absolute;
-      top: 90px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #09090b;
+    #blueprint-overlay.active { opacity: 1; }
+    .bp-callout {
+      position: absolute; transform: translate(-50%, -50%);
+      background: rgba(7, 7, 9, 0.88);
       border: 1px solid var(--accent-brass);
-      color: var(--text-bone);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
+      padding: 5px 10px; border-radius: 6px;
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--text-bone); white-space: nowrap;
     }
-
-    /* Telemetry Status Bar */
-    .telemetry-pill {
-      position: fixed;
-      bottom: 78px;
-      right: 16px;
-      z-index: 10;
-      background: rgba(9, 9, 11, 0.78);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-      display: flex;
-      gap: 14px;
-    }
-    .telemetry-pill span b {
-      color: var(--accent-brass);
-    }
+    .bp-callout span { color: var(--accent-brass); font-weight: 600; }
 
     @media (max-width: 1100px) {
       .ref-card { width: 240px; }
       .room-nav { width: 210px; }
-      .bottom-dock { overflow-x: auto; max-width: 95vw; }
+      .bottom-dock { overflow-x: auto; max-width: 96vw; }
     }
   </style>
   <script type="importmap">
@@ -607,159 +325,158 @@
   <!-- 3D WebGL Viewport -->
   <div id="canvas-container"></div>
 
+  <!-- Interactive 3D Portal Hotspots -->
+  <div id="hotspots-layer"></div>
+
   <!-- 2D Blueprint Dimension Callouts Overlay -->
   <div id="blueprint-overlay">
-    <div class="bp-callout" style="left: 50%; top: 14%;">
-      DWG A-101 · <span>NORTH PARAPET WIDTH: 7,200 MM</span> · SCALE 1:50
-    </div>
-    <div class="bp-callout" style="left: 50%; top: 28%;">
-      ZONE 01-02 · <span>SEMI-OUTDOOR PERGOLA KITCHEN, BAR & LOUNGE</span> (28.8 M²)
-    </div>
-    <div class="bp-callout" style="left: 42%; top: 47%;">
-      ZONE 03A · <span>WHITE PEBBLE COURTYARD & STEPPING SLABS</span>
-    </div>
-    <div class="bp-callout" style="left: 62%; top: 47%;">
-      ZONE 03B · <span>EMERALD PLUNGE POOL (5.4M × 2.6M)</span>
-    </div>
-    <div class="bp-callout" style="left: 50%; top: 58%;">
-      ICONIC FEATURE · <span>R 2,000 MM (4,000 MM SPAN) ARCHWAY GLAZING</span>
-    </div>
-    <div class="bp-callout" style="left: 50%; top: 71%;">
-      ZONE 04 · <span>MASTER CUBE SUITE + TEAK VANITY + PROJECTOR</span> (31.0 M²)
-    </div>
-    <div class="bp-callout" style="left: 50%; top: 84%;">
-      ZONE 05 · <span>SKYLIGHT EN-SUITE BATHROOM & RAIN SHOWER</span> (14.4 M²)
-    </div>
+    <div class="bp-callout" style="left: 50%; top: 15%;">DWG A-101 · <span>NORTH PARAPET WIDTH: 7,200 MM</span> · SCALE 1:50</div>
+    <div class="bp-callout" style="left: 50%; top: 29%;">ZONE 01-02 · <span>SEMI-OUTDOOR PERGOLA KITCHEN, BAR & LOUNGE</span> (28.8 M²)</div>
+    <div class="bp-callout" style="left: 41%; top: 48%;">ZONE 03A · <span>WHITE PEBBLE COURTYARD</span></div>
+    <div class="bp-callout" style="left: 61%; top: 48%;">ZONE 03B · <span>EMERALD PLUNGE POOL (5.4M × 2.6M)</span></div>
+    <div class="bp-callout" style="left: 50%; top: 59%;">ICONIC FEATURE · <span>R 2,000 MM (4,000 MM SPAN) ARCHWAY GLAZING</span></div>
+    <div class="bp-callout" style="left: 50%; top: 72%;">ZONE 04-05 · <span>MASTER CUBE SUITE + TEAK VANITY + PROJECTOR</span> (31.0 M²)</div>
+    <div class="bp-callout" style="left: 50%; top: 85%;">ZONE 06 · <span>SKYLIGHT EN-SUITE BATHROOM & RAIN SHOWER</span> (14.4 M²)</div>
   </div>
 
-  <!-- Top Bar -->
+  <!-- Top Header -->
   <header class="top-bar">
     <div class="brand-pill">
       <div class="brand-mark">BLACK RNDR</div>
       <div class="project-meta">
         <div class="project-title">Dari — Rahime Cube (Solara 123)</div>
-        <div class="project-sub">3D SPATIAL WALKTHROUGH · 7.2M × 18.0M BALI TROPICAL VILLA</div>
+        <div class="project-sub">PHOTOREAL 3D DEPTH-MESH & 320K POINT-CLOUD ENGINE</div>
       </div>
     </div>
 
     <div class="mode-switcher">
+      <button class="mode-btn active" data-mode="photoreal" id="btn-mode-photoreal">
+        <span class="key-hint">1</span> Photoreal 3D Depth-Mesh
+      </button>
+      <button class="mode-btn" data-mode="pointcloud" id="btn-mode-pointcloud">
+        <span class="key-hint">2</span> 3D Point-Cloud (320K Pts)
+      </button>
       <button class="mode-btn" data-mode="blueprint" id="btn-mode-blueprint">
-        <span class="key-hint">1</span> 2D Blueprint Plan
+        <span class="key-hint">3</span> 2D Blueprint Plan
       </button>
-      <button class="mode-btn active" data-mode="dollhouse" id="btn-mode-dollhouse">
-        <span class="key-hint">2</span> 3D Dollhouse Orbit
-      </button>
-      <button class="mode-btn" data-mode="walk" id="btn-mode-walk">
-        <span class="key-hint">3</span> Playable Walk (WASD)
-      </button>
-      <button class="mode-btn" data-mode="tour" id="btn-mode-tour">
-        <span class="key-hint">4</span> Auto Cinematic Tour
+      <button class="mode-btn" data-mode="dollhouse" id="btn-mode-dollhouse">
+        <span class="key-hint">4</span> 3D Villa Cutaway
       </button>
     </div>
   </header>
 
-  <!-- Left Room Navigation -->
+  <!-- Left Zone Navigation with Real Render Thumbnails -->
   <aside class="room-nav">
     <div class="nav-section-label">
-      <span>Camera Viewpoints</span>
-      <span>6 ZONES</span>
+      <span>Photoreal 3D Zones</span>
+      <span>6 CAMERAS</span>
     </div>
     <button class="room-btn" data-room="facade">
-      <span class="room-idx">01</span>
+      <img class="room-thumb" src="renders/enhanced_Fasad-01.png" alt="Facade" />
       <div class="room-info">
-        <span class="room-name">Front Scooter Facade</span>
-        <span class="room-Zone">Limestone Wall & Canopy</span>
+        <span class="room-name">01 · Front Scooter Facade</span>
+        <span class="room-zone">Limestone Wall & Street</span>
       </div>
     </button>
     <button class="room-btn" data-room="pergola">
-      <span class="room-idx">02</span>
+      <img class="room-thumb" src="renders/enhanced_Outdoor-05.png" alt="Pergola" />
       <div class="room-info">
-        <span class="room-name">Pergola Kitchen & Bar</span>
-        <span class="room-Zone">Waterfall Island & Lounge</span>
+        <span class="room-name">02 · Pergola Kitchen & Bar</span>
+        <span class="room-zone">Waterfall Island & 4 Stools</span>
       </div>
     </button>
     <button class="room-btn active" data-room="courtyard">
-      <span class="room-idx">03</span>
+      <img class="room-thumb" src="renders/enhanced_Outdoor-01.png" alt="Courtyard" />
       <div class="room-info">
-        <span class="room-name">Pool & 4m Archway</span>
-        <span class="room-Zone">Pebble Courtyard & Daybed</span>
+        <span class="room-name">03 · Pool & 4m Archway</span>
+        <span class="room-zone">Emerald Pool & Daybed</span>
       </div>
     </button>
     <button class="room-btn" data-room="bedroom">
-      <span class="room-idx">04</span>
+      <img class="room-thumb" src="renders/enhanced_Bedroom-01.png" alt="Bedroom" />
       <div class="room-info">
-        <span class="room-name">Master Arch Bedroom</span>
-        <span class="room-Zone">Rattan Pendant & Garden Arch</span>
+        <span class="room-name">04 · Master Arch Bedroom</span>
+        <span class="room-zone">King Bed & Garden Arch</span>
       </div>
     </button>
     <button class="room-btn" data-room="vanity">
-      <span class="room-idx">05</span>
+      <img class="room-thumb" src="renders/enhanced_Bedroom-03.png" alt="Vanity" />
       <div class="room-info">
-        <span class="room-name">Vanity & Netflix Screen</span>
-        <span class="room-Zone">Fluted Teak Wardrobe & POV</span>
+        <span class="room-name">05 · Vanity & Netflix Screen</span>
+        <span class="room-zone">Motorized Projector POV</span>
       </div>
     </button>
     <button class="room-btn" data-room="bathroom">
-      <span class="room-idx">06</span>
+      <img class="room-thumb" src="renders/enhanced_Bathroom-01.png" alt="Bathroom" />
       <div class="room-info">
-        <span class="room-name">Skylight Bathroom</span>
-        <span class="room-Zone">Teardrop Mirror & Shower</span>
+        <span class="room-name">06 · Skylight Bathroom</span>
+        <span class="room-zone">Teardrop Mirror & Sink</span>
       </div>
     </button>
 
     <div class="walk-help">
-      <strong>CONTROLS:</strong><br/>
-      • <strong>WASD / Arrows</strong>: Walk around<br/>
-      • <strong>Click Floor</strong>: Teleport to point<br/>
-      • <strong>Drag Mouse</strong>: Look / Orbit 360°<br/>
-      • <strong>Scroll</strong>: Zoom / Elevate
+      <strong>3D INTERACTION:</strong><br/>
+      • <strong>Move / Drag Mouse</strong>: 3D Parallax & Orbit<br/>
+      • <strong>WASD / Scroll</strong>: Push Camera Into 3D Scene<br/>
+      • <strong>Click Portal Orbs</strong>: Fly Through Archway<br/>
+      • <strong>Keys 1 / 2</strong>: Toggle Photoreal ⇄ Point-Cloud
     </div>
   </aside>
 
-  <!-- Right Actual Render Reference Card -->
+  <!-- Right 3D Point-Cloud & Depth Control Card -->
   <aside class="ref-card">
     <div class="ref-header">
-      <span class="ref-badge">BLACK RNDR Reference</span>
-      <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);" id="ref-counter">SHOT 03 / 06</span>
+      <span class="ref-badge">3D Depth & Point-Cloud</span>
+      <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);" id="ref-counter">307,200 PTS</span>
     </div>
-    <div class="ref-img-wrap" id="ref-preview-box" title="Click to toggle Split Screen Comparison">
-      <img id="ref-img" src="renders/enhanced_Outdoor-01.png" alt="BLACK RNDR Photoreal Render" />
-      <div class="ref-img-tag">
-        <span id="ref-label">Outdoor-01 · Archway & Pool</span>
-        <span style="color: var(--accent-brass);">2K FINAL</span>
+
+    <div class="slider-box">
+      <div class="slider-head">
+        <span>PHOTOREAL ⇄ POINT-CLOUD</span>
+        <span id="lbl-morph">0% CLOUD</span>
+      </div>
+      <input type="range" id="slider-morph" min="0" max="100" value="0" />
+    </div>
+
+    <div class="slider-box">
+      <div class="slider-head">
+        <span>3D DEPTH EXTRUSION</span>
+        <span id="lbl-depth">100%</span>
+      </div>
+      <input type="range" id="slider-depth" min="0" max="160" value="100" />
+    </div>
+
+    <div class="depth-mini-row">
+      <div class="mini-box">
+        <img id="ref-img" src="renders/enhanced_Outdoor-01.png" alt="RGB Render" />
+        <div class="mini-tag">2K RGB TEXTURE</div>
+      </div>
+      <div class="mini-box">
+        <img id="depth-img" src="renders/depth_courtyard.png" alt="3D Depth Map" />
+        <div class="mini-tag">3D Z-DEPTH MAP</div>
       </div>
     </div>
-    <button class="compare-cta" id="btn-toggle-compare">
-      <span>⇄ Compare 3D vs. Photoreal Render</span>
-    </button>
-    <div class="thumb-strip" id="thumb-strip">
-      <div class="thumb-item" data-src="renders/enhanced_Fasad-01.png" data-room="facade" title="Front Facade"><img src="renders/enhanced_Fasad-01.png" alt=""></div>
-      <div class="thumb-item" data-src="renders/enhanced_Outdoor-05.png" data-room="pergola" title="Pergola Bar"><img src="renders/enhanced_Outdoor-05.png" alt=""></div>
-      <div class="thumb-item active" data-src="renders/enhanced_Outdoor-01.png" data-room="courtyard" title="Archway & Pool"><img src="renders/enhanced_Outdoor-01.png" alt=""></div>
-      <div class="thumb-item" data-src="renders/enhanced_Bedroom-01.png" data-room="bedroom" title="Master Bedroom"><img src="renders/enhanced_Bedroom-01.png" alt=""></div>
-      <div class="thumb-item" data-src="renders/enhanced_Bathroom-01.png" data-room="bathroom" title="Skylight Bathroom"><img src="renders/enhanced_Bathroom-01.png" alt=""></div>
-    </div>
-  </aside>
 
-  <!-- Telemetry Pill -->
-  <div class="telemetry-pill">
-    <span>POS: <b id="tel-pos">X: 0.0m, Z: -1.5m</b></span>
-    <span>ARCH SPAN: <b>4,000 MM</b></span>
-    <span>PARAPET: <b>+3,850 MM</b></span>
-  </div>
+    <button class="action-btn" id="btn-scan-wave">
+      <span>📡 Trigger 3D LiDAR Scan Wave [L]</span>
+    </button>
+    <button class="action-btn" id="btn-auto-tour" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.18);">
+      <span>🎬 Auto Fly-Through Tour [T]</span>
+    </button>
+  </aside>
 
   <!-- Bottom Configurator Dock -->
   <div class="bottom-dock">
     <div class="dock-group">
-      <span class="dock-label">Interior Restyle:</span>
-      <button class="pill-btn active" data-style="solara">
-        <span class="swatch-dot" style="background: #E8DFD1;"></span> Solara Cream & Teak
+      <span class="dock-label">Shader Restyle:</span>
+      <button class="pill-btn active" data-style="0">
+        <span class="swatch-dot" style="background: #E8DFD1;"></span> Solara Original (2K)
       </button>
-      <button class="pill-btn" data-style="emerald">
+      <button class="pill-btn" data-style="1">
         <span class="swatch-dot" style="background: #1B4D48;"></span> Emerald Resort (Reel Style)
       </button>
-      <button class="pill-btn" data-style="wabisabi">
-        <span class="swatch-dot" style="background: #6E6D68;"></span> Kyoto Wabi-Sabi
+      <button class="pill-btn" data-style="2">
+        <span class="swatch-dot" style="background: #8B7D6B;"></span> Warm Terracotta Sunset
       </button>
     </div>
 
@@ -767,31 +484,16 @@
 
     <div class="dock-group">
       <span class="dock-label">Lighting:</span>
-      <button class="pill-btn active" data-time="morning">☀️ Golden Morning</button>
-      <button class="pill-btn" data-time="noon">🌤️ High Noon</button>
-      <button class="pill-btn" data-time="night">🌙 Starry Night</button>
+      <button class="pill-btn active" data-time="day" id="btn-time-day">☀️ Daylight Render</button>
+      <button class="pill-btn" data-time="night" id="btn-time-night">🌙 Night Render Crossfade</button>
     </div>
 
     <div class="dock-divider"></div>
 
     <div class="dock-group">
-      <button class="pill-btn" id="btn-projector" title="Drop down motorized Netflix Projector inside the 4m Archway">
-        🎬 Netflix Screen [P]
+      <button class="pill-btn" id="btn-projector" title="Jump to Motorized Netflix Projector Screen inside the 4m Archway">
+        🎬 Netflix Projector POV [P]
       </button>
-      <button class="pill-btn active" id="btn-roof" title="Toggle Roof & Pergola Cutaway">
-        🏠 Roof Cutaway [R]
-      </button>
-    </div>
-  </div>
-
-  <!-- Fullscreen Before/After Split Comparison Overlay -->
-  <div id="compare-overlay">
-    <div id="compare-render-layer" style="background-image: url('renders/enhanced_Outdoor-01.png');"></div>
-    <div class="compare-label-left">← LIVE THREE.JS 3D WORLD</div>
-    <div class="compare-label-right">BLACK RNDR PHOTOREAL RENDER →</div>
-    <button class="close-compare-btn" id="btn-close-compare">✕ Close Split View [ESC]</button>
-    <div id="compare-handle">
-      <div class="handle-knob">⇄</div>
     </div>
   </div>
 
@@ -801,1195 +503,766 @@
     import gsap from 'gsap';
 
     // ============================================================================
-    // 1. PROCEDURAL ARCHITECTURAL TEXTURE GENERATORS
-    // ============================================================================
-    function createLimestoneTexture(baseHex = '#EAE2D3', groutHex = '#C2B49E') {
-      const c = document.createElement('canvas');
-      c.width = 512; c.height = 512;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = groutHex;
-      ctx.fillRect(0, 0, 512, 512);
-
-      // Voronoi-like crazy cut limestone blocks
-      const pts = [];
-      for (let y = 0; y < 8; y++) {
-        for (let x = 0; x < 8; x++) {
-          pts.push({
-            x: (x + 0.2 + Math.random() * 0.6) * 64,
-            y: (y + 0.2 + Math.random() * 0.6) * 64,
-            shade: (Math.random() - 0.5) * 18
-          });
-        }
-      }
-      const baseColor = new THREE.Color(baseHex);
-      for (let py = 0; py < 512; py += 4) {
-        for (let px = 0; px < 512; px += 4) {
-          let d1 = 1e9, d2 = 1e9, near = pts[0];
-          for (let i = 0; i < pts.length; i++) {
-            const dx = Math.abs(px - pts[i].x);
-            const dy = Math.abs(py - pts[i].y);
-            const wx = Math.min(dx, 512 - dx);
-            const wy = Math.min(dy, 512 - dy);
-            const d = Math.hypot(wx, wy);
-            if (d < d1) { d2 = d1; d1 = d; near = pts[i]; }
-            else if (d < d2) { d2 = d; }
-          }
-          if (d2 - d1 > 3.2) {
-            const cCol = baseColor.clone().offsetHSL(0, 0, (near.shade + (Math.random() - 0.5) * 6) / 255);
-            ctx.fillStyle = `#${cCol.getHexString()}`;
-            ctx.fillRect(px, py, 4, 4);
-          }
-        }
-      }
-      const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(2, 1);
-      return tex;
-    }
-
-    function createTadelaktTexture(baseHex = '#EFECE6') {
-      const c = document.createElement('canvas');
-      c.width = 512; c.height = 512;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = baseHex;
-      ctx.fillRect(0, 0, 512, 512);
-      for (let i = 0; i < 900; i++) {
-        const x = Math.random() * 512;
-        const y = Math.random() * 512;
-        const r = 10 + Math.random() * 45;
-        ctx.fillStyle = i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(140,125,105,0.03)';
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      return tex;
-    }
-
-    function createFlutedWoodTexture(woodHex = '#7C5333', grooveHex = '#3D2614') {
-      const c = document.createElement('canvas');
-      c.width = 512; c.height = 512;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = woodHex;
-      ctx.fillRect(0, 0, 512, 512);
-      const slats = 32;
-      const w = 512 / slats;
-      for (let i = 0; i < slats; i++) {
-        ctx.fillStyle = grooveHex;
-        ctx.fillRect(i * w, 0, 3, 512);
-        ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        ctx.fillRect(i * w + 4, 0, w - 6, 512);
-      }
-      const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(2, 1);
-      return tex;
-    }
-
-    function createPebbleTexture() {
-      const c = document.createElement('canvas');
-      c.width = 512; c.height = 512;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#C9C4BA';
-      ctx.fillRect(0, 0, 512, 512);
-      const shades = ['#EAE6DF', '#DFDBD2', '#D4CFC5', '#F4F1EC', '#B8B2A6'];
-      for (let i = 0; i < 3200; i++) {
-        ctx.fillStyle = shades[i % shades.length];
-        ctx.beginPath();
-        ctx.ellipse(
-          Math.random() * 512,
-          Math.random() * 512,
-          2.5 + Math.random() * 4.5,
-          2 + Math.random() * 3.5,
-          Math.random() * Math.PI,
-          0, Math.PI * 2
-        );
-        ctx.fill();
-      }
-      const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(4, 4);
-      return tex;
-    }
-
-    function createPoolTileTexture() {
-      const c = document.createElement('canvas');
-      c.width = 512; c.height = 512;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#2B5B52';
-      ctx.fillRect(0, 0, 512, 512);
-      const n = 16;
-      const s = 512 / n;
-      for (let y = 0; y < n; y++) {
-        for (let x = 0; x < n; x++) {
-          const v = (Math.random() - 0.5) * 20;
-          ctx.fillStyle = `rgb(${40 + v}, ${98 + v}, ${88 + v})`;
-          ctx.fillRect(x * s + 1, y * s + 1, s - 2, s - 2);
-        }
-      }
-      const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(3, 6);
-      return tex;
-    }
-
-    function createWovenBambooTexture() {
-      const c = document.createElement('canvas');
-      c.width = 256; c.height = 256;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#8B6843';
-      ctx.fillRect(0, 0, 256, 256);
-      for (let y = 0; y < 256; y += 8) {
-        for (let x = 0; x < 256; x += 8) {
-          ctx.fillStyle = ((x + y) / 8) % 2 === 0 ? '#A47E53' : '#735332';
-          ctx.fillRect(x, y, 7, 7);
-        }
-      }
-      const tex = new THREE.CanvasTexture(c);
-      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-      tex.repeat.set(6, 6);
-      return tex;
-    }
-
-    function createNetflixTexture() {
-      const c = document.createElement('canvas');
-      c.width = 1024; c.height = 576;
-      const ctx = c.getContext('2d');
-      // White projector border
-      ctx.fillStyle = '#F2EFE9';
-      ctx.fillRect(0, 0, 1024, 576);
-      // Black screen
-      ctx.fillStyle = '#050507';
-      ctx.fillRect(28, 28, 1024 - 56, 576 - 56);
-      // Iconic red 'N' ribbon
-      ctx.fillStyle = '#B1060F';
-      ctx.fillRect(452, 160, 38, 256);
-      ctx.fillRect(534, 160, 38, 256);
-      ctx.fillStyle = '#E50914';
-      ctx.beginPath();
-      ctx.moveTo(452, 160);
-      ctx.lineTo(490, 160);
-      ctx.lineTo(572, 416);
-      ctx.lineTo(534, 416);
-      ctx.closePath();
-      ctx.fill();
-      const tex = new THREE.CanvasTexture(c);
-      return tex;
-    }
-
-    // ============================================================================
-    // 2. SCENE, CAMERA, RENDERER & CLIPPING PLANE SETUP
+    // 1. SCENE, CAMERA & RENDERER
     // ============================================================================
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#D8E6F2');
-    scene.fog = new THREE.FogExp2('#D8E6F2', 0.015);
+    scene.background = new THREE.Color('#070709');
 
-    const camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 150);
-    camera.position.set(-9.6, 9.6, -6.2);
+    const camera = new THREE.PerspectiveCamera(46, window.innerWidth / window.innerHeight, 0.1, 120);
+    camera.position.set(0, 0, 10.2);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.12;
     renderer.localClippingEnabled = true;
     container.appendChild(renderer.domElement);
-
-    // Horizontal Blueprint Cutaway Clipping Plane (slices everything above clipPlane.constant)
-    const blueprintClipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 12.0);
-    renderer.clippingPlanes = [blueprintClipPlane];
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
-    controls.target.set(0, 1.4, 1.5);
-    controls.maxPolarAngle = Math.PI / 2 - 0.01;
-    controls.minDistance = 0.5;
-    controls.maxDistance = 38;
+    controls.target.set(0, 0, 0);
+    controls.minDistance = 4.5;
+    controls.maxDistance = 26;
+    controls.maxAzimuthAngle = 0.52;
+    controls.minAzimuthAngle = -0.52;
+    controls.maxPolarAngle = Math.PI / 2 + 0.35;
+    controls.minPolarAngle = Math.PI / 2 - 0.38;
 
     // ============================================================================
-    // 3. SHARED PBR MATERIALS (DYNAMICALLY RESTYLABLE)
+    // 2. ZONE DEFINITIONS (ACTUAL 2K RENDERS + DEPTH MAPS + 3D PORTAL HOTSPOTS)
     // ============================================================================
-    const limestoneTex = createLimestoneTexture();
-    const plasterTex = createTadelaktTexture();
-    const woodTex = createFlutedWoodTexture();
-    const pebbleTex = createPebbleTexture();
-    const poolTex = createPoolTileTexture();
-    const bambooTex = createWovenBambooTexture();
-
-    const mats = {
-      plasterWall: new THREE.MeshStandardMaterial({
-        color: 0xF3EFE6,
-        map: plasterTex,
-        roughness: 0.78,
-        metalness: 0.02
-      }),
-      featurePlaster: new THREE.MeshStandardMaterial({
-        color: 0xEAE2D3,
-        map: plasterTex,
-        roughness: 0.82,
-        metalness: 0.02
-      }),
-      limestone: new THREE.MeshStandardMaterial({
-        color: 0xEFE7D8,
-        map: limestoneTex,
-        roughness: 0.85,
-        metalness: 0.04
-      }),
-      teakWood: new THREE.MeshStandardMaterial({
-        color: 0x9C6B43,
-        roughness: 0.55,
-        metalness: 0.08
-      }),
-      flutedTeak: new THREE.MeshStandardMaterial({
-        color: 0x8C5D38,
-        map: woodTex,
-        roughness: 0.58,
-        metalness: 0.08
-      }),
-      bambooWeave: new THREE.MeshStandardMaterial({
-        color: 0xA88256,
-        map: bambooTex,
-        roughness: 0.75,
-        side: THREE.DoubleSide
-      }),
-      floorMicrocement: new THREE.MeshStandardMaterial({
-        color: 0xEDE8DF,
-        roughness: 0.62,
-        metalness: 0.02
-      }),
-      pebbles: new THREE.MeshStandardMaterial({
-        color: 0xE5E1D8,
-        map: pebbleTex,
-        roughness: 0.92
-      }),
-      steppingStone: new THREE.MeshStandardMaterial({
-        color: 0xDFD5C3,
-        roughness: 0.8
-      }),
-      poolTile: new THREE.MeshStandardMaterial({
-        color: 0x1F6E60,
-        map: poolTex,
-        roughness: 0.28
-      }),
-      poolWater: new THREE.MeshPhysicalMaterial({
-        color: 0x26A695,
-        transparent: true,
-        opacity: 0.85,
-        roughness: 0.06,
-        metalness: 0.12,
-        transmission: 0.45,
-        ior: 1.333,
-        reflectivity: 0.92
-      }),
-      glass: new THREE.MeshPhysicalMaterial({
-        color: 0xE8F4F8,
-        transparent: true,
-        opacity: 0.32,
-        roughness: 0.05,
-        metalness: 0.1,
-        transmission: 0.75,
-        side: THREE.DoubleSide
-      }),
-      mirror: new THREE.MeshStandardMaterial({
-        color: 0xE6E8EA,
-        roughness: 0.04,
-        metalness: 0.96
-      }),
-      bedLinenCream: new THREE.MeshStandardMaterial({
-        color: 0xEFEAE1,
-        roughness: 0.85
-      }),
-      bedThrowBrown: new THREE.MeshStandardMaterial({
-        color: 0x6F4E37,
-        roughness: 0.88
-      }),
-      curtainDrape: new THREE.MeshStandardMaterial({
-        color: 0xC8B9A6,
-        roughness: 0.9,
-        side: THREE.DoubleSide
-      }),
-      matteBlack: new THREE.MeshStandardMaterial({
-        color: 0x18181B,
-        roughness: 0.35,
-        metalness: 0.6
-      }),
-      foliageGreen: new THREE.MeshStandardMaterial({
-        color: 0x3D6336,
-        roughness: 0.72,
-        side: THREE.DoubleSide
-      }),
-      foliageDark: new THREE.MeshStandardMaterial({
-        color: 0x294624,
-        roughness: 0.75,
-        side: THREE.DoubleSide
-      }),
-      asphalt: new THREE.MeshStandardMaterial({
-        color: 0x383A3E,
-        roughness: 0.9
-      })
+    const ZONES = {
+      facade: {
+        title: '01 · Front Scooter Facade',
+        dayUrl: 'renders/enhanced_Fasad-01.png',
+        nightUrl: 'renders/enhanced_Fasad-01.png',
+        depthUrl: 'renders/depth_facade.png',
+        aspect: 1.77,
+        hasNightRender: false,
+        waterBox: [0.0, 0.0, 0.0, 0.0],
+        portals: [
+          { label: 'Enter Pergola Kitchen & Bar →', target: 'pergola', pos: [-1.4, -0.3, 0.6] },
+          { label: 'Jump to Pool & 4m Archway →', target: 'courtyard', pos: [1.5, 0.2, 0.5] }
+        ]
+      },
+      pergola: {
+        title: '02 · Pergola Kitchen & Waterfall Bar',
+        dayUrl: 'renders/enhanced_Outdoor-05.png',
+        nightUrl: 'renders/enhanced_Outdoor-05.png',
+        depthUrl: 'renders/depth_pergola.png',
+        aspect: 1.333,
+        hasNightRender: false,
+        waterBox: [0.0, 0.0, 0.0, 0.0],
+        portals: [
+          { label: '← Front Scooter Street', target: 'facade', pos: [-2.6, -0.4, 0.8] },
+          { label: 'Step out to Plunge Pool & Archway →', target: 'courtyard', pos: [2.4, -0.2, 0.6] }
+        ]
+      },
+      courtyard: {
+        title: '03 · Emerald Plunge Pool & 4m Archway',
+        dayUrl: 'renders/enhanced_Outdoor-01.png',
+        nightUrl: 'renders/enhanced_Outdoor-01-night.png',
+        depthUrl: 'renders/depth_courtyard.png',
+        aspect: 1.50,
+        hasNightRender: true,
+        waterBox: [0.46, 0.96, 0.02, 0.44], // UV region of emerald plunge pool for animated water ripples
+        portals: [
+          { label: 'Enter 4.0m Archway Bedroom →', target: 'bedroom', pos: [-0.35, -0.15, -0.8] },
+          { label: '🎬 View Netflix Projector Inside Arch', target: 'vanity', pos: [0.65, 0.55, 0.2] },
+          { label: '← Back to Pergola Bar', target: 'pergola', pos: [-3.2, -1.8, 1.8] }
+        ]
+      },
+      bedroom: {
+        title: '04 · Master Arch Bedroom',
+        dayUrl: 'renders/enhanced_Bedroom-01.png',
+        nightUrl: 'renders/enhanced_Bedroom-02.png',
+        depthUrl: 'renders/depth_bedroom.png',
+        aspect: 1.333,
+        hasNightRender: true,
+        waterBox: [0.0, 0.0, 0.0, 0.0],
+        portals: [
+          { label: '🎬 Turn to Vanity & Netflix Screen', target: 'vanity', pos: [-2.2, 0.2, 0.8] },
+          { label: 'Enter Skylight Bathroom →', target: 'bathroom', pos: [-1.1, 0.5, 0.3] },
+          { label: '← Exit to Courtyard Pool', target: 'courtyard', pos: [2.2, -0.5, -0.4] }
+        ]
+      },
+      vanity: {
+        title: '05 · Fluted Teak Vanity & Netflix Projector',
+        dayUrl: 'renders/enhanced_Bedroom-03.png',
+        nightUrl: 'renders/enhanced_Bedroom-02.png',
+        depthUrl: 'renders/depth_vanity.png',
+        aspect: 1.77,
+        hasNightRender: false,
+        waterBox: [0.0, 0.0, 0.0, 0.0],
+        portals: [
+          { label: '← Back to King Bed View', target: 'bedroom', pos: [-2.4, -0.3, 1.1] },
+          { label: 'Step Through Archway to Pool →', target: 'courtyard', pos: [1.8, -0.5, -0.5] },
+          { label: 'En-Suite Skylight Bathroom →', target: 'bathroom', pos: [-0.8, 0.6, 0.4] }
+        ]
+      },
+      bathroom: {
+        title: '06 · Skylight En-Suite Bathroom',
+        dayUrl: 'renders/enhanced_Bathroom-01.png',
+        nightUrl: 'renders/enhanced_Bathroom-02.png',
+        depthUrl: 'renders/depth_bathroom.png',
+        aspect: 1.0,
+        hasNightRender: true,
+        waterBox: [0.0, 0.0, 0.0, 0.0],
+        portals: [
+          { label: '← Return to Master Arch Bedroom', target: 'bedroom', pos: [-2.1, -0.4, 0.9] },
+          { label: '← Return to Courtyard Pool', target: 'courtyard', pos: [2.1, -0.4, 0.9] }
+        ]
+      }
     };
 
-    // Helper to create shadow-casting meshes quickly
-    function addBox(parent, w, h, d, mat, x, y, z, rx = 0, ry = 0, rz = 0) {
-      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    // Preload all textures
+    const texLoader = new THREE.TextureLoader();
+    const texCache = {};
+    function getTex(url) {
+      if (!texCache[url]) {
+        const t = texLoader.load(url);
+        t.colorSpace = THREE.SRGBColorSpace;
+        t.minFilter = THREE.LinearFilter;
+        t.magFilter = THREE.LinearFilter;
+        texCache[url] = t;
+      }
+      return texCache[url];
+    }
+    Object.values(ZONES).forEach(z => {
+      getTex(z.dayUrl);
+      getTex(z.nightUrl);
+      const dt = texLoader.load(z.depthUrl);
+      dt.minFilter = THREE.LinearFilter;
+      dt.magFilter = THREE.LinearFilter;
+      texCache[z.depthUrl] = dt;
+    });
+
+    // ============================================================================
+    // 3. PHOTOREAL 3D DEPTH-MESH + 320,000 POINT-CLOUD SHADER ENGINE
+    // ============================================================================
+    const photorealGroup = new THREE.Group();
+    scene.add(photorealGroup);
+
+    const GRID_W = 640;
+    const GRID_H = 480; // 640 x 480 = 307,200 vertices / points!
+    const basePlaneGeo = new THREE.PlaneGeometry(13.6, 9.2, GRID_W - 1, GRID_H - 1);
+
+    const sharedUniforms = {
+      uDayTex: { value: getTex(ZONES.courtyard.dayUrl) },
+      uNightTex: { value: getTex(ZONES.courtyard.nightUrl) },
+      uDepthTex: { value: getTex(ZONES.courtyard.depthUrl) },
+      uNightMix: { value: 0.0 },
+      uHasNightTex: { value: 1.0 },
+      uDepthScale: { value: 3.8 },
+      uMorphCloud: { value: 0.0 }, // 0 = Photoreal Mesh, 1 = 3D Point-Cloud
+      uTime: { value: 0.0 },
+      uScanWave: { value: -2.0 }, // -2 to +2 LiDAR laser scan wave
+      uStyleMode: { value: 0 }, // 0 = Original, 1 = Emerald Resort, 2 = Warm Terracotta
+      uWaterBox: { value: new THREE.Vector4(0.46, 0.96, 0.02, 0.44) },
+      uPointSize: { value: 3.6 * Math.min(window.devicePixelRatio, 2) }
+    };
+
+    const vertexShader = /* glsl */`
+      uniform sampler2D uDepthTex;
+      uniform float uDepthScale;
+      uniform float uMorphCloud;
+      uniform float uTime;
+      uniform float uPointSize;
+      varying vec2 vUv;
+      varying float vDepth;
+      varying vec3 vWorldPos;
+
+      // Pseudo-random hash per vertex for organic point-cloud jitter
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+      }
+
+      void main() {
+        vUv = uv;
+        float d = texture2D(uDepthTex, uv).r;
+        vDepth = d;
+
+        // Soft edge pinning on mesh mode so frame borders stay clean,
+        // while in Point-Cloud mode all points float freely in 3D space!
+        float edgeX = smoothstep(0.0, 0.04, uv.x) * smoothstep(1.0, 0.96, uv.x);
+        float edgeY = smoothstep(0.0, 0.04, uv.y) * smoothstep(1.0, 0.96, uv.y);
+        float edgePin = mix(edgeX * edgeY, 1.0, uMorphCloud);
+
+        // True perspective relief: foreground (d > 0.45) comes toward camera (+Z),
+        // background/interior archway (d < 0.45) recedes deep behind (-Z)
+        float zOffset = (d - 0.44) * uDepthScale * edgePin;
+
+        // Perspective X/Y scale compensation so foreground doesn't balloon unnaturally
+        vec3 pos = position;
+        pos.z += zOffset;
+
+        // Subtle 3D LiDAR swirl / breathing when in Point-Cloud mode
+        if (uMorphCloud > 0.01) {
+          float rnd = hash(uv);
+          pos.x += sin(uTime * 1.4 + rnd * 6.28) * 0.04 * uMorphCloud;
+          pos.y += cos(uTime * 1.2 + rnd * 6.28) * 0.04 * uMorphCloud;
+          pos.z += sin(uTime * 1.8 + uv.x * 8.0) * 0.08 * uMorphCloud;
+        }
+
+        vec4 worldPosition = modelMatrix * vec4(pos, 1.0);
+        vWorldPos = worldPosition.xyz;
+        vec4 mvPosition = viewMatrix * worldPosition;
+        gl_Position = projectionMatrix * mvPosition;
+
+        // Perspective-scaled point size for 3D Point-Cloud
+        gl_PointSize = uPointSize * (10.5 / max(1.0, -mvPosition.z)) * (0.75 + 0.55 * d);
+      }
+    `;
+
+    const fragmentShader = /* glsl */`
+      uniform sampler2D uDayTex;
+      uniform sampler2D uNightTex;
+      uniform float uNightMix;
+      uniform float uHasNightTex;
+      uniform float uMorphCloud;
+      uniform float uTime;
+      uniform float uScanWave;
+      uniform int uStyleMode;
+      uniform vec4 uWaterBox;
+      varying vec2 vUv;
+      varying float vDepth;
+      varying vec3 vWorldPos;
+
+      void main() {
+        vec2 sampleUv = vUv;
+
+        // Live animated water ripples on the Emerald Plunge Pool region
+        if (vUv.x > uWaterBox.x && vUv.x < uWaterBox.y && vUv.y > uWaterBox.z && vUv.y < uWaterBox.w) {
+          float waveX = sin(vUv.y * 95.0 + uTime * 2.8) * 0.0022;
+          float waveY = cos(vUv.x * 70.0 - uTime * 2.2) * 0.0018;
+          sampleUv += vec2(waveX, waveY);
+        }
+
+        vec3 dayCol = texture2D(uDayTex, sampleUv).rgb;
+        vec3 nightCol = texture2D(uNightTex, sampleUv).rgb;
+
+        // If zone has a dedicated night render, crossfade directly to it;
+        // otherwise synthesize realistic architectural warm night lighting!
+        vec3 synthNight = dayCol * vec3(0.28, 0.34, 0.52);
+        float warmGlow = smoothstep(0.35, 0.85, dot(dayCol, vec3(0.333))) * smoothstep(0.2, 0.65, vDepth);
+        synthNight += dayCol * vec3(1.15, 0.78, 0.42) * warmGlow * 0.85;
+
+        vec3 finalNight = mix(synthNight, nightCol, uHasNightTex);
+        vec3 col = mix(dayCol, finalNight, uNightMix);
+
+        // Material-selective Shader Restyle (targets warm plaster walls & neutral fabrics while preserving foliage/sky)
+        float maxC = max(col.r, max(col.g, col.b));
+        float minC = min(col.r, min(col.g, col.b));
+        float sat = (maxC - minC) / (maxC + 0.001);
+        float lum = dot(col, vec3(0.299, 0.587, 0.114));
+        bool isGreenFoliage = (col.g > col.r * 1.06 && col.g > col.b * 1.08);
+        bool isSkyBlue = (col.b > col.r * 1.12 && vUv.y > 0.68);
+        float plasterMask = (1.0 - smoothstep(0.12, 0.38, sat)) * smoothstep(0.25, 0.65, lum);
+        if (isGreenFoliage || isSkyBlue) plasterMask = 0.0;
+
+        if (uStyleMode == 1) {
+          // Emerald Resort (Reel Style): deep architectural emerald-teal accents on plaster & textiles
+          vec3 emeraldTone = vec3(0.14, 0.38, 0.35) * (0.45 + 0.75 * lum);
+          col = mix(col, emeraldTone, plasterMask * 0.68);
+        } else if (uStyleMode == 2) {
+          // Warm Terracotta Sunset grading
+          vec3 terraTone = vec3(0.76, 0.52, 0.38) * (0.4 + 0.75 * lum);
+          col = mix(col, terraTone, plasterMask * 0.55);
+          col *= vec3(1.06, 0.97, 0.90);
+        }
+
+        // 3D LiDAR Scanner Wave highlight (sweeps from foreground to deep background)
+        float scanDist = abs(vDepth - uScanWave);
+        if (scanDist < 0.045) {
+          float scanIntensity = 1.0 - (scanDist / 0.045);
+          // Grid lines inside the LiDAR scan band
+          float grid = step(0.92, fract(vUv.x * 80.0)) + step(0.92, fract(vUv.y * 60.0));
+          col = mix(col, vec3(0.18, 0.92, 0.82), scanIntensity * (0.45 + 0.55 * min(1.0, grid)));
+        }
+
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `;
+
+    const pointFragmentShader = /* glsl */`
+      uniform sampler2D uDayTex;
+      uniform sampler2D uNightTex;
+      uniform float uNightMix;
+      uniform float uHasNightTex;
+      uniform float uMorphCloud;
+      uniform float uScanWave;
+      uniform int uStyleMode;
+      varying vec2 vUv;
+      varying float vDepth;
+
+      void main() {
+        // Circular soft-edged Gaussian splat disc for each point
+        vec2 cxy = 2.0 * gl_PointCoord - 1.0;
+        float r2 = dot(cxy, cxy);
+        if (r2 > 1.0) discard;
+        float alpha = smoothstep(1.0, 0.15, r2) * uMorphCloud;
+
+        vec3 dayCol = texture2D(uDayTex, vUv).rgb;
+        vec3 nightCol = texture2D(uNightTex, vUv).rgb;
+        vec3 synthNight = dayCol * vec3(0.32, 0.38, 0.58);
+        vec3 col = mix(dayCol, mix(synthNight, nightCol, uHasNightTex), uNightMix);
+
+        if (uStyleMode == 1) {
+          col = mix(col, col * vec3(0.55, 1.08, 0.98), 0.45);
+        } else if (uStyleMode == 2) {
+          col = mix(col, col * vec3(1.16, 0.92, 0.78), 0.45);
+        }
+
+        // LiDAR depth wave highlight
+        float scanDist = abs(vDepth - uScanWave);
+        if (scanDist < 0.05) {
+          col = mix(col, vec3(0.18, 0.95, 0.85), (1.0 - scanDist / 0.05) * 0.85);
+        }
+
+        gl_FragColor = vec4(col * 1.08, alpha);
+      }
+    `;
+
+    const depthMeshMat = new THREE.ShaderMaterial({
+      uniforms: sharedUniforms,
+      vertexShader,
+      fragmentShader,
+      transparent: true,
+      side: THREE.DoubleSide
+    });
+
+    const pointCloudMat = new THREE.ShaderMaterial({
+      uniforms: sharedUniforms,
+      vertexShader,
+      fragmentShader: pointFragmentShader,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.NormalBlending
+    });
+
+    const photorealMesh = new THREE.Mesh(basePlaneGeo, depthMeshMat);
+    photorealGroup.add(photorealMesh);
+
+    const pointCloudMesh = new THREE.Points(basePlaneGeo, pointCloudMat);
+    pointCloudMesh.visible = false;
+    photorealGroup.add(pointCloudMesh);
+
+    // Subtle 3D surrounding architectural wireframe cage so when orbiting in Point-Cloud mode
+    // you feel the exact 7.20m x 18.0m CAD grid volume around the point cloud!
+    const gridHelper = new THREE.GridHelper(24, 24, 0xD4AF7A, 0x22222A);
+    gridHelper.position.y = -4.65;
+    gridHelper.material.transparent = true;
+    gridHelper.material.opacity = 0.25;
+    photorealGroup.add(gridHelper);
+
+    // Ambient floating dust/pollen particles in the 3D space
+    const dustCount = 220;
+    const dustGeo = new THREE.BufferGeometry();
+    const dustPos = new Float32Array(dustCount * 3);
+    for (let i = 0; i < dustCount; i++) {
+      dustPos[i * 3] = (Math.random() - 0.5) * 14;
+      dustPos[i * 3 + 1] = (Math.random() - 0.5) * 9;
+      dustPos[i * 3 + 2] = (Math.random() - 0.3) * 5;
+    }
+    dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+    const dustMat = new THREE.PointsMaterial({
+      color: 0xF5E6C8, size: 0.06, transparent: true, opacity: 0.55
+    });
+    const dustParticles = new THREE.Points(dustGeo, dustMat);
+    photorealGroup.add(dustParticles);
+
+    // ============================================================================
+    // 4. ARCHITECTURAL 3D DOLLHOUSE & 2D BLUEPRINT GROUP (MODES 3 & 4)
+    // ============================================================================
+    const villaGroup = new THREE.Group();
+    villaGroup.visible = false;
+    scene.add(villaGroup);
+
+    const blueprintClipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 12.0);
+    renderer.clippingPlanes = [blueprintClipPlane];
+
+    // Lighting for Dollhouse / Blueprint mode
+    const hemiLight = new THREE.HemisphereLight(0xFFFDF8, 0x8C7D70, 0.9);
+    scene.add(hemiLight);
+    const sunLight = new THREE.DirectionalLight(0xFFF3DC, 2.2);
+    sunLight.position.set(12, 18, -8);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.set(2048, 2048);
+    scene.add(sunLight);
+
+    function addBox(parent, w, h, d, colorHex, x, y, z) {
+      const m = new THREE.Mesh(
+        new THREE.BoxGeometry(w, h, d),
+        new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.65 })
+      );
       m.position.set(x, y, z);
-      if (rx || ry || rz) m.rotation.set(rx, ry, rz);
-      m.castShadow = true;
-      m.receiveShadow = true;
+      m.castShadow = true; m.receiveShadow = true;
       parent.add(m);
       return m;
     }
 
-    // ============================================================================
-    // 4. BUILD THE COMPLETE DARI - RAHIME CUBE (SOLARA 123) 3D ARCHITECTURE
-    //    Coordinate system (Meters):
-    //    Width X: -3.6m (West) to +3.6m (East) -> 7.20m total width
-    //    Depth Z: -9.0m (North Front Road) to +9.2m (South En-Suite Bathroom)
-    // ============================================================================
-    const villaGroup = new THREE.Group();
-    scene.add(villaGroup);
+    // Build clean architectural massing + textured floor/render cards for Modes 3 & 4
+    addBox(villaGroup, 7.4, 0.14, 16.0, 0xEDE8DF, 0, 0.05, 1.2); // Main Slab
+    addBox(villaGroup, 0.22, 1.1, 9.6, 0xEFECE6, -3.6, 0.6, -2.0); // West cutaway wall
+    addBox(villaGroup, 0.22, 2.85, 9.6, 0xEFECE6, 3.6, 1.45, -2.0); // East wall
+    addBox(villaGroup, 4.6, 2.85, 0.28, 0xDFD5C3, 0.1, 1.45, -6.75); // Front Limestone wall
+    addBox(villaGroup, 2.4, 0.96, 0.82, 0xF5F2EB, -0.45, 0.58, -4.25); // Waterfall Bar
+    for (let i = 0; i < 4; i++) addBox(villaGroup, 0.38, 0.65, 0.38, 0x7A5434, -1.35 + i * 0.6, 0.38, -3.45);
+    addBox(villaGroup, 2.0, 0.45, 0.85, 0xF5F2EB, 2.4, 0.32, -6.15); // Lounge sofa
+    addBox(villaGroup, 0.85, 0.45, 2.3, 0xF5F2EB, 3.05, 0.32, -5.2);
+    for (let i = 0; i < 5; i++) addBox(villaGroup, 1.15, 0.06, 0.62, 0xD8CEBE, -2.35, 0.15, -2.0 + i * 0.82);
+    addBox(villaGroup, 2.8, 0.12, 5.4, 0x1E8A7A, 1.95, 0.16, 0.12); // Emerald Plunge Pool
+    addBox(villaGroup, 1.15, 0.26, 1.45, 0xF5F2EB, 1.22, 0.28, 2.12); // Floating Daybed
 
-    const roofCutawayGroup = new THREE.Group();
-    villaGroup.add(roofCutawayGroup);
-
-    // --- 4.0 SURROUNDING GROUND, TROPICAL GARDEN & FRONT STREET ---
-    const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshStandardMaterial({ color: 0x2E3B29, roughness: 0.95 }));
-    groundPlane.rotation.x = -Math.PI / 2;
-    groundPlane.position.y = -0.05;
-    groundPlane.receiveShadow = true;
-    scene.add(groundPlane);
-
-    // Front Asphalt Road (Z = -9.6 to -7.9)
-    addBox(villaGroup, 14.0, 0.08, 2.0, mats.asphalt, 0, -0.02, -8.8);
-    // Sidewalk & Front Scooter Porch Floor (Z = -7.9 to -6.8)
-    addBox(villaGroup, 7.6, 0.12, 1.3, mats.steppingStone, 0, 0.04, -7.35);
-
-    // Main Interior/Courtyard Floor Slab (Z = -6.8 to +9.2)
-    addBox(villaGroup, 7.4, 0.14, 16.0, mats.floorMicrocement, 0, 0.05, 1.2);
-
-    // --- PERIMETER BOUNDARY WALLS (West X = -3.6, East X = +3.6) ---
-    // West boundary wall along courtyard & pergola (low cutaway base + full upper wall in roofCutawayGroup)
-    addBox(villaGroup, 0.22, 0.95, 9.6, mats.plasterWall, -3.6, 0.52, -2.0);
-    addBox(roofCutawayGroup, 0.22, 1.9, 9.6, mats.plasterWall, -3.6, 1.95, -2.0);
-    // East boundary wall along courtyard & pergola (Z = -6.8 to +2.8)
-    addBox(villaGroup, 0.22, 2.85, 9.6, mats.plasterWall, 3.6, 1.45, -2.0);
-
-    // --- 4.1 ZONE 1: FRONT FACADE, LIMESTONE WALL & 2 SCOOTERS (Z = -6.8) ---
-    // Crazy-cut Limestone Front Wall (Z = -6.8)
-    addBox(villaGroup, 4.6, 2.85, 0.28, mats.limestone, 0.1, 1.45, -6.75);
-    // Left Wing Wall + Fluted Teak Entrance Door (X = -2.65)
-    addBox(villaGroup, 0.5, 2.85, 0.28, mats.limestone, -3.35, 1.45, -6.75);
-    addBox(villaGroup, 1.15, 2.55, 0.14, mats.flutedTeak, -2.52, 1.32, -6.75);
-    // Brass Door Handle
-    addBox(villaGroup, 0.04, 0.65, 0.06, new THREE.MeshStandardMaterial({ color: 0xD4AF7A, metalness: 0.8, roughness: 0.2 }), -2.08, 1.25, -6.84);
-    // Right Fluted Teak Utility Storage Box (X = +2.85)
-    addBox(villaGroup, 1.35, 2.65, 0.32, mats.flutedTeak, 2.85, 1.38, -6.75);
-
-    // Two Stylized Scooters Parked on Front Terrace (Z = -7.35)
-    function createScooter(x, z, bodyColor, seatColor) {
-      const sc = new THREE.Group();
-      sc.position.set(x, 0.1, z);
-      const wheelMat = mats.matteBlack;
-      const bodyMat = new THREE.MeshStandardMaterial({ color: bodyColor, metalness: 0.6, roughness: 0.25 });
-      const seatMat = new THREE.MeshStandardMaterial({ color: seatColor, roughness: 0.6 });
-      // Wheels
-      const wGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.12, 20);
-      wGeo.rotateZ(Math.PI / 2);
-      const fw = new THREE.Mesh(wGeo, wheelMat);
-      fw.position.set(-0.55, 0.24, 0);
-      fw.rotation.y = Math.PI / 2;
-      sc.add(fw);
-      const bw = new THREE.Mesh(wGeo, wheelMat);
-      bw.position.set(0.55, 0.24, 0);
-      bw.rotation.y = Math.PI / 2;
-      sc.add(bw);
-      // Chassis & Rear Cowl
-      addBox(sc, 0.85, 0.35, 0.36, bodyMat, 0.2, 0.48, 0);
-      // Front Shield & Steering Column
-      addBox(sc, 0.22, 0.78, 0.34, bodyMat, -0.42, 0.68, 0, 0, 0, -0.2);
-      // Handlebars
-      addBox(sc, 0.1, 0.06, 0.62, wheelMat, -0.48, 1.08, 0);
-      // Seat
-      addBox(sc, 0.65, 0.12, 0.32, seatMat, 0.22, 0.7, 0);
-      villaGroup.add(sc);
-    }
-    createScooter(-0.7, -7.35, 0x9CA3AF, 0x1F2937); // Silver Maxi Scooter
-    createScooter(0.65, -7.35, 0xEFECE6, 0x8C583A); // Cream Retro Vespa
-
-    // --- 4.2 ZONE 2: SEMI-OUTDOOR PERGOLA KITCHEN, WATERFALL BAR & LOUNGE (Z = -6.7 to -2.6) ---
-    // Timber Columns supporting Pergola
-    addBox(villaGroup, 0.18, 3.2, 0.18, mats.teakWood, -1.8, 1.6, -3.0);
-    addBox(villaGroup, 0.18, 3.2, 0.18, mats.teakWood, 0.8, 1.6, -3.0);
-    addBox(villaGroup, 0.18, 3.2, 0.18, mats.teakWood, 3.35, 1.6, -3.0);
-
-    // Pergola Roof (in roofCutawayGroup so user can toggle it)
-    addBox(roofCutawayGroup, 7.4, 0.06, 5.2, mats.bambooWeave, 0, 3.22, -5.2);
-    for (let bx = -3.4; bx <= 3.4; bx += 0.85) {
-      addBox(roofCutawayGroup, 0.1, 0.16, 5.3, mats.teakWood, bx, 3.14, -5.2);
-    }
-    // Cross beams
-    addBox(roofCutawayGroup, 7.4, 0.18, 0.16, mats.teakWood, 0, 3.08, -3.0);
-    addBox(roofCutawayGroup, 7.4, 0.18, 0.16, mats.teakWood, 0, 3.08, -6.6);
-
-    // Outdoor Kitchen Counter against North Limestone Wall (X = -1.6 to +0.8, Z = -6.2)
-    // Matte Black Refrigerator (X = -1.65, Z = -6.25)
-    addBox(villaGroup, 0.72, 2.05, 0.68, mats.matteBlack, -1.65, 1.1, -6.25);
-    // Kitchen Counter + Fluted Wood Doors (X = -0.35, Z = -6.25)
-    addBox(villaGroup, 1.85, 0.92, 0.65, mats.plasterWall, -0.35, 0.56, -6.25);
-    addBox(villaGroup, 1.72, 0.76, 0.04, mats.flutedTeak, -0.35, 0.52, -5.91);
-    // Tall Espresso/Appliance Tower on Kitchen Left (X = +0.75, Z = -6.25)
-    addBox(villaGroup, 0.55, 1.68, 0.68, mats.plasterWall, 0.75, 0.94, -6.25);
-    // Two Floating Plaster Shelves on Limestone Wall
-    addBox(villaGroup, 2.2, 0.07, 0.32, mats.plasterWall, -0.15, 1.65, -6.42);
-    addBox(villaGroup, 2.2, 0.07, 0.32, mats.plasterWall, -0.15, 2.15, -6.42);
-
-    // Cream Plaster Waterfall Bar Island (X = -0.45, Z = -4.25, Width 2.4m)
-    addBox(villaGroup, 2.4, 0.96, 0.82, mats.plasterWall, -0.45, 0.58, -4.25);
-    // Limestone Front Inlay on Waterfall Island
-    addBox(villaGroup, 2.16, 0.82, 0.04, mats.limestone, -0.45, 0.52, -3.83);
-
-    // 4 Teak & Woven Rattan Barstools along the Bar Island (Z = -3.45)
-    for (let i = 0; i < 4; i++) {
-      const sx = -1.35 + i * 0.6;
-      const sz = -3.45;
-      addBox(villaGroup, 0.38, 0.06, 0.38, mats.bambooWeave, sx, 0.68, sz);
-      addBox(villaGroup, 0.04, 0.6, 0.04, mats.teakWood, sx - 0.16, 0.38, sz - 0.16);
-      addBox(villaGroup, 0.04, 0.6, 0.04, mats.teakWood, sx + 0.16, 0.38, sz - 0.16);
-      addBox(villaGroup, 0.04, 0.6, 0.04, mats.teakWood, sx - 0.16, 0.38, sz + 0.16);
-      addBox(villaGroup, 0.04, 0.6, 0.04, mats.teakWood, sx + 0.16, 0.38, sz + 0.16);
-    }
-
-    // L-Shaped Built-In Cream Lounge Sofa on East Pergola Side (X = +1.4 to +3.4, Z = -6.5 to -4.1)
-    addBox(villaGroup, 2.0, 0.42, 0.85, mats.plasterWall, 2.4, 0.31, -6.15);
-    addBox(villaGroup, 0.85, 0.42, 2.3, mats.plasterWall, 3.05, 0.31, -5.2);
-    // Plush Cushions
-    addBox(villaGroup, 1.9, 0.14, 0.78, mats.bedLinenCream, 2.4, 0.58, -6.12);
-    addBox(villaGroup, 0.78, 0.14, 2.15, mats.bedLinenCream, 3.02, 0.58, -5.2);
-    // Low Round Teak Coffee Table & Jute Rug (X = 2.05, Z = -4.9)
-    const rugMesh = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.02, 1.5), mats.bambooWeave);
-    rugMesh.position.set(2.05, 0.13, -4.95);
-    rugMesh.receiveShadow = true;
-    villaGroup.add(rugMesh);
-    const tableCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.46, 0.06, 28), mats.teakWood);
-    tableCyl.position.set(2.05, 0.38, -4.95);
-    tableCyl.castShadow = true;
-    villaGroup.add(tableCyl);
-    const tableBase = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 0.24, 20), mats.teakWood);
-    tableBase.position.set(2.05, 0.23, -4.95);
-    villaGroup.add(tableBase);
-
-    // --- 4.3 ZONE 3: WHITE PEBBLE COURTYARD, STEPPING SLABS & EMERALD PLUNGE POOL (Z = -2.6 to +2.8) ---
-    // White Pebble Bed (West & Center X = -3.3 to +0.45, Z = -2.6 to +1.85)
-    addBox(villaGroup, 3.8, 0.04, 4.45, mats.pebbles, -1.45, 0.13, -0.35);
-
-    // 5 Large Limestone Stepping Stones along West side (X = -2.45, Z = -2.2 to +1.3)
-    for (let i = 0; i < 5; i++) {
-      addBox(villaGroup, 1.15, 0.06, 0.62, mats.steppingStone, -2.35, 0.15, -2.0 + i * 0.82);
-    }
-
-    // Timber Pool Deck in front of Main Archway (Z = +1.85 to +2.85, X = -3.4 to +0.55)
-    addBox(villaGroup, 4.0, 0.08, 1.05, mats.teakWood, -1.45, 0.15, 2.35);
-
-    // Emerald Plunge Pool Basin (X = +0.55 to +3.35, Z = -2.6 to +2.85)
-    // Pool Interior Walls & Tiled Bottom
-    addBox(villaGroup, 2.8, 0.06, 5.4, mats.poolTile, 1.95, 0.13, 0.12);
-    // Pool Stone Coping Border
-    addBox(villaGroup, 0.18, 0.14, 5.5, mats.steppingStone, 0.55, 0.18, 0.12);
-    addBox(villaGroup, 2.9, 0.14, 0.18, mats.steppingStone, 1.95, 0.18, -2.62);
-
-    // Animated Water Surface
-    const waterGeo = new THREE.PlaneGeometry(2.72, 5.32, 24, 36);
-    waterGeo.rotateX(-Math.PI / 2);
-    const poolWaterMesh = new THREE.Mesh(waterGeo, mats.poolWater);
-    poolWaterMesh.position.set(1.95, 0.21, 0.12);
-    villaGroup.add(poolWaterMesh);
-
-    // Floating Cream Daybed / Sunlounger at South Pool Edge (X = +1.25, Z = +2.15)
-    addBox(villaGroup, 1.15, 0.24, 1.45, mats.bedLinenCream, 1.22, 0.28, 2.12);
-    const bolsterGeo = new THREE.CylinderGeometry(0.11, 0.11, 1.08, 16);
-    bolsterGeo.rotateZ(Math.PI / 2);
-    const bolsterMesh = new THREE.Mesh(bolsterGeo, mats.bedLinenCream);
-    bolsterMesh.position.set(1.22, 0.44, 2.68);
-    villaGroup.add(bolsterMesh);
-
-    // --- 4.4 ZONE 4: ICONIC 4.0M ARCHWAY CUBE BEDROOM (Z = +2.85 to +7.15) ---
-    // Build North Facade Wall (7.20m wide x 3.85m high) with exact 4.0m Semicircular Archway Cutout!
-    function createArchWall(width, height, archRadius, thickness, mat) {
-      const shape = new THREE.Shape();
-      shape.moveTo(-width / 2, 0);
-      shape.lineTo(-archRadius, 0);
-      // Semicircular arch from -archRadius to +archRadius
-      shape.absarc(0, 0, archRadius, Math.PI, 0, true);
-      shape.lineTo(width / 2, 0);
-      shape.lineTo(width / 2, height);
-      shape.lineTo(-width / 2, height);
-      shape.closePath();
-
-      const extrudeSettings = {
-        steps: 1,
-        depth: thickness,
-        bevelEnabled: true,
-        bevelThickness: 0.02,
-        bevelSize: 0.02,
-        bevelSegments: 2
-      };
-      const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-      const mesh = new THREE.Mesh(geo, mat);
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      return mesh;
-    }
-
-    // North Main Archway Wall (Z = +2.85, Width = 7.2m, Height = 3.85m, Arch R = 2.0m -> 4.0m Span)
-    const northArchWall = createArchWall(7.2, 3.85, 2.05, 0.34, mats.plasterWall);
-    northArchWall.position.set(0, 0.12, 2.85);
-    villaGroup.add(northArchWall);
-
-    // Timber Arch Frame & 4-Panel Sliding Glass Doors inside North Archway
-    const archGlassGeo = new THREE.CircleGeometry(2.02, 40, 0, Math.PI);
-    const archGlass = new THREE.Mesh(archGlassGeo, mats.glass);
-    archGlass.position.set(0, 0.12, 3.02);
-    villaGroup.add(archGlass);
-
-    // 4 Vertical Timber Mullions for the Archway Glass Doors
-    [-1.98, -0.68, 0.68, 1.98].forEach((mx) => {
-      const mh = Math.sqrt(Math.max(0.1, 2.02 * 2.02 - mx * mx));
-      addBox(villaGroup, 0.06, mh, 0.08, mats.teakWood, mx, 0.12 + mh / 2, 3.02);
-    });
-
-    // Cascading Green Ivy along the Parapet Top of the Cube (Z = +2.82, Y = 3.65 to 3.98)
-    for (let ix = -3.4; ix <= 3.4; ix += 0.28) {
-      const dropH = 0.32 + Math.sin(ix * 3.7) * 0.16 + Math.random() * 0.18;
-      addBox(villaGroup, 0.3, dropH, 0.22, ix % 2 === 0 ? mats.foliageGreen : mats.foliageDark, ix, 3.88 - dropH / 2, 2.82);
-    }
-
-    // Motorized Drop-Down Netflix Projector Screen inside the Archway (Z = +3.18)
-    const projectorGroup = new THREE.Group();
-    projectorGroup.position.set(0, 2.55, 3.18);
-    villaGroup.add(projectorGroup);
-
-    // Housing bar at ceiling/arch
-    addBox(projectorGroup, 2.65, 0.09, 0.09, mats.matteBlack, 0, 0, 0);
-    // Drop-down screen mesh (scales Y from 0.02 to 1.0 when toggled)
-    const netflixScreenMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.5, 1.42),
-      new THREE.MeshBasicMaterial({ map: createNetflixTexture(), side: THREE.DoubleSide })
+    // 4.0m Semicircular Archway Wall
+    const archShape = new THREE.Shape();
+    archShape.moveTo(-3.6, 0); archShape.lineTo(-2.0, 0);
+    archShape.absarc(0, 0, 2.0, Math.PI, 0, true);
+    archShape.lineTo(3.6, 0); archShape.lineTo(3.6, 3.85); archShape.lineTo(-3.6, 3.85);
+    const archWall = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(archShape, { depth: 0.32, bevelEnabled: false }),
+      new THREE.MeshStandardMaterial({ color: 0xF3EFE8, roughness: 0.7 })
     );
-    netflixScreenMesh.position.set(0, -0.75, 0);
-    netflixScreenMesh.rotation.y = Math.PI;
-    projectorGroup.add(netflixScreenMesh);
-    // Start retracted so user can see through the archway, or toggleable with [P]
-    projectorGroup.scale.y = 0.01;
-    projectorGroup.visible = false;
+    archWall.position.set(0, 0.12, 2.85);
+    archWall.castShadow = true;
+    villaGroup.add(archWall);
 
-    // East Wall of Bedroom with Second Semicircular Garden Archway (X = +3.5, Z = +2.85 to +7.15)
-    const eastArchWall = createArchWall(4.3, 3.85, 1.65, 0.26, mats.plasterWall);
-    eastArchWall.rotation.y = -Math.PI / 2;
-    eastArchWall.position.set(3.55, 0.12, 5.0);
-    villaGroup.add(eastArchWall);
-    // Glass in East Archway
-    const eastGlass = new THREE.Mesh(new THREE.CircleGeometry(1.62, 32, 0, Math.PI), mats.glass);
-    eastGlass.rotation.y = -Math.PI / 2;
-    eastGlass.position.set(3.42, 0.12, 5.0);
-    villaGroup.add(eastGlass);
+    // Master Bedroom & Bathroom walls
+    addBox(villaGroup, 0.24, 3.85, 6.35, 0xF3EFE8, -3.55, 2.04, 6.02);
+    addBox(villaGroup, 7.2, 3.85, 0.24, 0xE5DDD0, 0, 2.04, 7.15);
+    addBox(villaGroup, 7.2, 3.85, 0.24, 0xDFD5C3, 0, 2.04, 9.15);
+    addBox(villaGroup, 0.24, 3.85, 2.0, 0xF3EFE8, 3.55, 2.04, 8.15);
+    addBox(villaGroup, 2.25, 0.55, 2.15, 0x7A5434, 0.15, 0.4, 5.95); // King Bed
 
-    // Curtains along the Bedroom Archway & East Wall
-    addBox(villaGroup, 0.55, 3.5, 0.18, mats.curtainDrape, 1.65, 1.88, 3.28);
-    addBox(villaGroup, 0.18, 3.5, 0.75, mats.curtainDrape, 3.25, 1.88, 3.55);
+    // ============================================================================
+    // 5. 3D SPATIAL PORTAL HOTSPOTS MANAGER
+    // ============================================================================
+    const hotspotsLayer = document.getElementById('hotspots-layer');
+    let activePortalObjs = [];
 
-    // West Wall of Bedroom (X = -3.55, Z = +2.85 to +7.15)
-    addBox(villaGroup, 0.26, 3.85, 4.3, mats.plasterWall, -3.55, 2.04, 5.0);
+    function rebuildPortals(zoneKey) {
+      hotspotsLayer.innerHTML = '';
+      activePortalObjs = [];
+      const zone = ZONES[zoneKey];
+      if (!zone || (currentMode !== 'photoreal' && currentMode !== 'pointcloud')) return;
 
-    // Built-In Fluted Teak Wardrobe, Open Robe Closet & Vanity Desk on West Wall (X = -3.15, Z = +3.3 to +6.5)
-    // Upper Fluted Teak Header Cabinet
-    addBox(villaGroup, 0.58, 0.78, 3.2, mats.flutedTeak, -3.15, 3.25, 4.9);
-    // South Fluted Teak Full-Height Wardrobe Column (Z = +5.95)
-    addBox(villaGroup, 0.58, 2.75, 1.05, mats.flutedTeak, -3.15, 1.5, 5.95);
-    // Vanity Desk Countertop + Open Closet Shelf (Z = +3.5 to +5.4)
-    addBox(villaGroup, 0.55, 0.06, 2.05, mats.teakWood, -3.15, 0.82, 4.4);
-    // Organic Pebble Vanity Mirror on West Wall (Z = +4.65)
-    const vanityMirror = new THREE.Mesh(new THREE.CircleGeometry(0.45, 28), mats.mirror);
-    vanityMirror.scale.set(0.85, 1.25, 1);
-    vanityMirror.rotation.y = Math.PI / 2;
-    vanityMirror.position.set(-3.38, 1.55, 4.68);
-    villaGroup.add(vanityMirror);
-    // Espresso Machine on Vanity Counter
-    addBox(villaGroup, 0.24, 0.28, 0.22, mats.bedLinenCream, -3.18, 0.99, 4.25);
-    // Teak Vanity Stool (X = -2.65, Z = +4.68)
-    addBox(villaGroup, 0.42, 0.46, 0.34, mats.teakWood, -2.65, 0.35, 4.68);
+      zone.portals.forEach(p => {
+        const el = document.createElement('button');
+        el.className = 'portal-hotspot';
+        el.innerHTML = `<span class="portal-dot"></span><span>${p.label}</span>`;
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          transitionToZone(p.target);
+        });
+        hotspotsLayer.appendChild(el);
+        activePortalObjs.push({
+          el,
+          pos3D: new THREE.Vector3(p.pos[0], p.pos[1], p.pos[2])
+        });
+      });
+    }
 
-    // Headboard Feature Partition Wall between Bedroom & Bathroom (Z = +7.05)
-    // Main textured limestone/plaster headboard wall (X = -1.2 to +2.6)
-    addBox(villaGroup, 3.8, 3.65, 0.28, mats.featurePlaster, 0.7, 1.94, 7.05);
-    // Full-height Wood-Framed Mirror on West side of Bedroom (X = -2.35, Z = +7.02)
-    addBox(villaGroup, 0.92, 2.35, 0.08, mats.teakWood, -2.35, 1.3, 7.02);
-    addBox(villaGroup, 0.76, 2.18, 0.09, mats.mirror, -2.35, 1.3, 7.01);
-    // Recessed Teak Doorway into Bathroom (X = -1.45, Z = +7.05)
-    addBox(villaGroup, 0.85, 2.65, 0.12, mats.teakWood, -1.45, 1.45, 7.08);
-
-    // King Platform Bed in Master Bedroom (Centered at X = +0.75, Z = +5.55, facing North Archway)
-    // Woven Area Rug under Bed
-    addBox(villaGroup, 3.2, 0.02, 3.1, mats.bedLinenCream, 0.75, 0.13, 5.35);
-    // Solid Teak Low Bed Frame
-    addBox(villaGroup, 2.15, 0.28, 2.25, mats.teakWood, 0.75, 0.26, 5.65);
-    // Cream Mattress
-    addBox(villaGroup, 1.98, 0.26, 2.08, mats.bedLinenCream, 0.75, 0.52, 5.68);
-    // Espresso Brown Linen Throw Blanket
-    addBox(villaGroup, 2.02, 0.28, 1.15, mats.bedThrowBrown, 0.75, 0.53, 5.32);
-    // Layered Pillows against Headboard
-    [-0.55, 0, 0.55].forEach((px) => {
-      addBox(villaGroup, 0.52, 0.24, 0.28, mats.bedLinenCream, 0.75 + px, 0.72, 6.52, -0.2, 0, 0);
-      addBox(villaGroup, 0.44, 0.2, 0.22, mats.bedThrowBrown, 0.75 + px, 0.7, 6.28, -0.15, 0, 0);
-    });
-
-    // Solid Wood Block Nightstand (X = -0.58, Z = +6.55) + Woven Rattan Bell Pendant Lamp
-    addBox(villaGroup, 0.42, 0.52, 0.42, mats.steppingStone, -0.58, 0.38, 6.55);
-    // Hanging Rattan Bell Pendant Light
-    const pendantDome = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.14, 0.32, 0.48, 20, 1, true),
-      mats.bambooWeave
-    );
-    pendantDome.position.set(-0.58, 1.48, 6.55);
-    villaGroup.add(pendantDome);
-    addBox(villaGroup, 0.015, 2.1, 0.015, mats.teakWood, -0.58, 2.65, 6.55);
-
-    // Bedroom Ceiling Slab (in roofCutawayGroup so user can toggle it)
-    addBox(roofCutawayGroup, 7.3, 0.18, 4.35, mats.plasterWall, 0, 3.88, 5.0);
-
-    // --- 4.5 ZONE 5: EN-SUITE SKYLIGHT BATHROOM (Z = +7.15 to +9.2) ---
-    // South Back Limestone Feature Wall (Z = +9.15)
-    addBox(villaGroup, 7.3, 3.65, 0.28, mats.limestone, 0, 1.94, 9.15);
-    // West & East Bathroom Walls
-    addBox(villaGroup, 0.26, 3.65, 2.1, mats.plasterWall, -3.55, 1.94, 8.15);
-    addBox(villaGroup, 0.26, 3.65, 2.1, mats.plasterWall, 3.55, 1.94, 8.15);
-
-    // Woven Rattan Skylight Ceiling over Bathroom (in roofCutawayGroup)
-    addBox(roofCutawayGroup, 7.1, 0.06, 1.95, mats.bambooWeave, 0, 3.68, 8.15);
-
-    // Floating Live-Edge Teak Vanity Counter on South Wall (X = -1.2, Z = +8.72, Width 2.4m)
-    addBox(villaGroup, 2.4, 0.09, 0.58, mats.teakWood, -1.2, 0.86, 8.72);
-    // Carved River-Stone Vessel Sink (X = -1.2, Z = +8.72)
-    const sinkGeo = new THREE.CylinderGeometry(0.26, 0.2, 0.18, 24);
-    const sinkMesh = new THREE.Mesh(sinkGeo, mats.steppingStone);
-    sinkMesh.position.set(-1.2, 0.99, 8.72);
-    sinkMesh.castShadow = true;
-    villaGroup.add(sinkMesh);
-    // Matte Black Curved Faucet
-    addBox(villaGroup, 0.03, 0.28, 0.03, mats.matteBlack, -1.38, 1.04, 8.88);
-    addBox(villaGroup, 0.03, 0.03, 0.16, mats.matteBlack, -1.38, 1.17, 8.81);
-    // Woven Rattan Laundry Hamper under Vanity (X = -1.95, Z = +8.72)
-    const hamperMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.58, 20), mats.bambooWeave);
-    hamperMesh.position.set(-1.95, 0.41, 8.72);
-    villaGroup.add(hamperMesh);
-
-    // Iconic Organic Teardrop / Avocado Mirror on South Bathroom Wall (X = -1.2, Y = 1.95, Z = +8.98)
-    const teardropShape = new THREE.Shape();
-    teardropShape.moveTo(0, 0.78);
-    teardropShape.bezierCurveTo(0.42, 0.75, 0.58, 0.1, 0.52, -0.35);
-    teardropShape.bezierCurveTo(0.45, -0.72, -0.45, -0.72, -0.52, -0.35);
-    teardropShape.bezierCurveTo(-0.58, 0.1, -0.35, 0.75, 0, 0.78);
-    const mirrorGeo = new THREE.ShapeGeometry(teardropShape, 32);
-    const teardropMirror = new THREE.Mesh(mirrorGeo, mats.mirror);
-    teardropMirror.rotation.y = Math.PI;
-    teardropMirror.position.set(-1.2, 1.95, 8.99);
-    villaGroup.add(teardropMirror);
-
-    // Wall-Mounted Modern White Toilet (X = +0.85, Z = +8.75)
-    addBox(villaGroup, 0.38, 0.36, 0.54, mats.bedLinenCream, 0.85, 0.46, 8.75);
-    // Dual-flush actuator plate on wall
-    addBox(villaGroup, 0.22, 0.15, 0.02, mats.bedLinenCream, 0.85, 0.98, 9.0);
-
-    // Walk-In Rain Shower on East End of Bathroom (X = +2.45, Z = +8.15)
-    // Teak Slatted Duckboard Floor
-    addBox(villaGroup, 1.75, 0.04, 1.85, mats.flutedTeak, 2.5, 0.14, 8.15);
-    // Glass Shower Screen Partition
-    addBox(villaGroup, 0.03, 2.6, 1.25, mats.glass, 1.62, 1.42, 8.45);
-    // Matte Black Rain Showerhead
-    addBox(villaGroup, 0.45, 0.03, 0.03, mats.matteBlack, 3.2, 2.45, 8.15);
-    const showerHead = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.02, 20), mats.matteBlack);
-    showerHead.position.set(2.98, 2.42, 8.15);
-    villaGroup.add(showerHead);
-
-    // --- 4.6 LUSH BALI TROPICAL LANDSCAPING (PALM TREES & PLANTERS) ---
-    function createTropicalPalm(x, z, height = 5.5) {
-      const palm = new THREE.Group();
-      palm.position.set(x, 0, z);
-      // Curved trunk
-      const trunkGeo = new THREE.CylinderGeometry(0.11, 0.17, height, 10);
-      const trunk = new THREE.Mesh(trunkGeo, mats.teakWood);
-      trunk.position.y = height / 2;
-      trunk.castShadow = true;
-      palm.add(trunk);
-      // Fronds
-      for (let i = 0; i < 9; i++) {
-        const angle = (i / 9) * Math.PI * 2;
-        const frond = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.03, 2.1), i % 2 === 0 ? mats.foliageGreen : mats.foliageDark);
-        frond.position.set(Math.sin(angle) * 0.9, height - 0.15, Math.cos(angle) * 0.9);
-        frond.rotation.y = angle;
-        frond.rotation.x = 0.35;
-        frond.castShadow = true;
-        palm.add(frond);
+    function updatePortalsScreenPos() {
+      if (currentMode !== 'photoreal' && currentMode !== 'pointcloud') {
+        hotspotsLayer.style.display = 'none';
+        return;
       }
-      scene.add(palm);
-    }
-    createTropicalPalm(-4.6, -7.8, 6.2);
-    createTropicalPalm(4.5, -7.2, 6.8);
-    createTropicalPalm(-4.4, -0.5, 5.4);
-    createTropicalPalm(4.6, 1.2, 6.0);
-    createTropicalPalm(4.5, 5.0, 4.8); // Outside East Bedroom Archway!
-
-    // Low Tropical Shrubs along West Pebble Courtyard & East Pool Border
-    for (let sz = -2.2; sz <= 1.6; sz += 0.65) {
-      addBox(villaGroup, 0.48, 0.75 + (Math.random() * 0.3), 0.52, mats.foliageGreen, -3.28, 0.45, sz);
-      addBox(villaGroup, 0.42, 0.85 + (Math.random() * 0.35), 0.52, mats.foliageDark, 3.32, 0.48, sz);
-    }
-    // Lush Planter outside East Bedroom Archway Window (X = +4.0, Z = +3.6 to +6.4)
-    for (let sz = 3.6; sz <= 6.4; sz += 0.45) {
-      addBox(villaGroup, 0.65, 1.65 + (Math.random() * 0.5), 0.45, sz % 2 === 0 ? mats.foliageGreen : mats.foliageDark, 3.95, 0.9, sz);
+      hotspotsLayer.style.display = 'block';
+      const wHalf = window.innerWidth / 2;
+      const hHalf = window.innerHeight / 2;
+      activePortalObjs.forEach(item => {
+        const v = item.pos3D.clone().project(camera);
+        if (v.z > 1.0) {
+          item.el.style.display = 'none';
+        } else {
+          item.el.style.display = 'flex';
+          item.el.style.left = `${v.x * wHalf + wHalf}px`;
+          item.el.style.top = `${-v.y * hHalf + hHalf}px`;
+        }
+      });
     }
 
     // ============================================================================
-    // 5. LIGHTING SYSTEM (GOLDEN MORNING / HIGH NOON / STARRY NIGHT)
+    // 6. SEAMLESS POINT-CLOUD PORTAL TRANSITION BETWEEN ZONES
     // ============================================================================
-    const hemiLight = new THREE.HemisphereLight(0xFFF6E5, 0x8B7355, 0.75);
-    hemiLight.position.set(0, 25, 0);
-    scene.add(hemiLight);
+    let currentZoneKey = 'courtyard';
+    let currentMode = 'photoreal'; // 'photoreal' | 'pointcloud' | 'blueprint' | 'dollhouse'
+    let isTransitioning = false;
+    let autoTourTimer = null;
 
-    const sunLight = new THREE.DirectionalLight(0xFFE6C2, 2.2);
-    sunLight.position.set(-12, 18, -8);
-    sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 2048;
-    sunLight.shadow.mapSize.height = 2048;
-    sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 48;
-    const d = 14;
-    sunLight.shadow.camera.left = -d;
-    sunLight.shadow.camera.right = d;
-    sunLight.shadow.camera.top = d;
-    sunLight.shadow.camera.bottom = -d;
-    sunLight.shadow.bias = -0.0005;
-    scene.add(sunLight);
+    function applyMorphValue(val) {
+      sharedUniforms.uMorphCloud.value = val;
+      pointCloudMesh.visible = val > 0.01;
+      photorealMesh.visible = val < 0.99;
+      depthMeshMat.opacity = 1.0 - val * 0.85;
+      document.getElementById('slider-morph').value = Math.round(val * 100);
+      document.getElementById('lbl-morph').textContent = `${Math.round(val * 100)}% CLOUD`;
+    }
 
-    // Architectural Interior & Night Accent Lights
-    const archUpLightLeft = new THREE.PointLight(0xFFAA55, 0.8, 5, 2);
-    archUpLightLeft.position.set(-2.35, 0.45, 2.65);
-    scene.add(archUpLightLeft);
+    function triggerScanWave() {
+      sharedUniforms.uScanWave.value = 1.05;
+      gsap.to(sharedUniforms.uScanWave, {
+        value: -0.15,
+        duration: 1.8,
+        ease: 'power2.inOut'
+      });
+    }
 
-    const archUpLightRight = new THREE.PointLight(0xFFAA55, 0.8, 5, 2);
-    archUpLightRight.position.set(2.35, 0.45, 2.65);
-    scene.add(archUpLightRight);
+    function transitionToZone(targetKey) {
+      if (!ZONES[targetKey] || isTransitioning) return;
+      isTransitioning = true;
+      currentZoneKey = targetKey;
+      const z = ZONES[targetKey];
 
-    const poolUnderwaterLight = new THREE.PointLight(0x48E5C2, 0.6, 6, 2);
-    poolUnderwaterLight.position.set(1.95, 0.35, 0.2);
-    scene.add(poolUnderwaterLight);
-
-    const bedroomPendantLight = new THREE.PointLight(0xFFAF60, 1.4, 7, 2);
-    bedroomPendantLight.position.set(-0.58, 1.4, 6.55);
-    scene.add(bedroomPendantLight);
-
-    const pergolaWarmLight = new THREE.PointLight(0xFFBA75, 1.1, 8, 2);
-    pergolaWarmLight.position.set(-0.3, 2.8, -4.5);
-    scene.add(pergolaWarmLight);
-
-    const bathroomVanityLight = new THREE.PointLight(0xFFCC88, 1.2, 6, 2);
-    bathroomVanityLight.position.set(-1.2, 2.6, 8.3);
-    scene.add(bathroomVanityLight);
-
-    // ============================================================================
-    // 6. CAMERA VIEWPOINTS (MATCHED TO REAL BLACK RNDR PORTFOLIO RENDERS)
-    // ============================================================================
-    const ROOM_PRESETS = {
-      facade: {
-        idx: '01 / 06',
-        label: 'Fasad-01 · Limestone & Scooters',
-        render: 'renders/enhanced_Fasad-01.png',
-        nightRender: 'renders/enhanced_Fasad-01.png',
-        pos: { x: 0.0, y: 1.65, z: -11.4 },
-        target: { x: 0.0, y: 1.55, z: -6.7 }
-      },
-      pergola: {
-        idx: '02 / 06',
-        label: 'Outdoor-05 · Pergola Kitchen & Bar',
-        render: 'renders/enhanced_Outdoor-05.png',
-        nightRender: 'renders/enhanced_Outdoor-03-night.png',
-        pos: { x: 1.85, y: 1.62, z: -2.35 },
-        target: { x: -0.55, y: 1.25, z: -5.5 }
-      },
-      courtyard: {
-        idx: '03 / 06',
-        label: 'Outdoor-01 · 4m Archway & Pool',
-        render: 'renders/enhanced_Outdoor-01.png',
-        nightRender: 'renders/enhanced_Outdoor-01-night.png',
-        pos: { x: 0.0, y: 1.62, z: -2.45 },
-        target: { x: 0.0, y: 1.65, z: 3.5 }
-      },
-      bedroom: {
-        idx: '04 / 06',
-        label: 'Bedroom-01 · Rattan Pendant & Arch',
-        render: 'renders/enhanced_Bedroom-01.png',
-        nightRender: 'renders/enhanced_Bedroom-01.png',
-        pos: { x: -1.65, y: 1.55, z: 3.55 },
-        target: { x: 1.35, y: 1.35, z: 6.15 }
-      },
-      vanity: {
-        idx: '05 / 06',
-        label: 'Bedroom-03 · Bed POV & Netflix Screen',
-        render: 'renders/enhanced_Bedroom-03.png',
-        nightRender: 'renders/enhanced_Bedroom-02.png',
-        pos: { x: 0.65, y: 1.48, z: 6.35 },
-        target: { x: -0.65, y: 1.42, z: 2.2 }
-      },
-      bathroom: {
-        idx: '06 / 06',
-        label: 'Bathroom-01 · Teardrop Mirror & Sink',
-        render: 'renders/enhanced_Bathroom-01.png',
-        nightRender: 'renders/enhanced_Bathroom-02.png',
-        pos: { x: -2.25, y: 1.58, z: 7.55 },
-        target: { x: 0.65, y: 1.45, z: 8.85 }
-      }
-    };
-
-    let currentMode = 'dollhouse'; // 'blueprint' | 'dollhouse' | 'walk' | 'tour'
-    let currentRoomKey = 'courtyard';
-    let currentTimeOfDay = 'morning';
-    let tourTimeline = null;
-
-    function updateReferenceCard(roomKey) {
-      currentRoomKey = roomKey;
-      const preset = ROOM_PRESETS[roomKey];
-      if (!preset) return;
-      const imgUrl = (currentTimeOfDay === 'night' && preset.nightRender) ? preset.nightRender : preset.render;
-      document.getElementById('ref-img').src = imgUrl;
-      document.getElementById('compare-render-layer').style.backgroundImage = `url('${imgUrl}')`;
-      document.getElementById('ref-label').textContent = preset.label;
-      document.getElementById('ref-counter').textContent = `SHOT ${preset.idx}`;
-
+      // Update active sidebar button
       document.querySelectorAll('.room-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.room === roomKey);
+        b.classList.toggle('active', b.dataset.room === targetKey);
       });
-      document.querySelectorAll('.thumb-item').forEach(t => {
-        t.classList.toggle('active', t.dataset.room === roomKey);
-      });
-    }
 
-    function flyToRoom(roomKey, duration = 1.4) {
-      if (tourTimeline) { tourTimeline.kill(); tourTimeline = null; }
-      const preset = ROOM_PRESETS[roomKey];
-      if (!preset) return;
-
-      // Ensure walls are full height when flying into a room
-      setModeUI('walk');
-      gsap.to(blueprintClipPlane, { constant: 12.0, duration: 0.8, ease: 'power2.out' });
-      document.getElementById('blueprint-overlay').classList.remove('active');
-
-      // Show Netflix screen automatically if visiting the 'vanity' room
-      if (roomKey === 'vanity' && !projectorOpen) {
-        toggleProjector(true);
+      // Ensure we are in Photoreal or Point-Cloud mode
+      if (currentMode === 'blueprint' || currentMode === 'dollhouse') {
+        switchMode('photoreal', false);
       }
 
-      updateReferenceCard(roomKey);
+      const targetMorphEnd = (currentMode === 'pointcloud') ? 1.0 : 0.0;
 
-      gsap.to(camera.position, {
-        x: preset.pos.x,
-        y: preset.pos.y,
-        z: preset.pos.z,
-        duration,
-        ease: 'power3.inOut'
+      // Phase 1: Dissolve into 3D Point-Cloud & push camera forward through portal
+      pointCloudMesh.visible = true;
+      photorealMesh.visible = true;
+      triggerScanWave();
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          applyMorphValue(targetMorphEnd);
+          isTransitioning = false;
+        }
       });
-      gsap.to(controls.target, {
-        x: preset.target.x,
-        y: preset.target.y,
-        z: preset.target.z,
-        duration,
-        ease: 'power3.inOut'
+
+      tl.to(sharedUniforms.uMorphCloud, {
+        value: 1.0,
+        duration: 0.45,
+        ease: 'power2.in',
+        onUpdate: () => applyMorphValue(sharedUniforms.uMorphCloud.value)
+      }, 0);
+
+      tl.to(camera.position, {
+        x: 0, y: 0, z: 6.2,
+        duration: 0.48,
+        ease: 'power2.in'
+      }, 0);
+
+      // Swap 2K textures & depth map at peak point-cloud dispersion
+      tl.add(() => {
+        sharedUniforms.uDayTex.value = getTex(z.dayUrl);
+        sharedUniforms.uNightTex.value = getTex(z.nightUrl);
+        sharedUniforms.uDepthTex.value = getTex(z.depthUrl);
+        sharedUniforms.uHasNightTex.value = z.hasNightRender ? 1.0 : 0.0;
+        sharedUniforms.uWaterBox.value.set(...z.waterBox);
+
+        document.getElementById('ref-img').src = z.dayUrl;
+        document.getElementById('depth-img').src = z.depthUrl;
+
+        camera.position.set(0, 0, 12.8);
+        controls.target.set(0, 0, 0);
+        rebuildPortals(targetKey);
       });
+
+      // Phase 2: Pull camera into new room & crystallize 320,000 points into sharp 2K render
+      tl.to(camera.position, {
+        x: 0, y: 0, z: 10.2,
+        duration: 0.75,
+        ease: 'power3.out'
+      });
+
+      tl.to(sharedUniforms.uMorphCloud, {
+        value: targetMorphEnd,
+        duration: 0.7,
+        ease: 'power2.out',
+        onUpdate: () => applyMorphValue(sharedUniforms.uMorphCloud.value)
+      }, '-=0.65');
     }
 
     // ============================================================================
-    // 7. VIEW MODES: 2D BLUEPRINT -> 3D DOLLHOUSE -> PLAYABLE WALK -> AUTO TOUR
+    // 7. TOP-BAR VIEW MODES (1: PHOTOREAL, 2: POINT-CLOUD, 3: BLUEPRINT, 4: DOLLHOUSE)
     // ============================================================================
-    function setModeUI(mode) {
+    function switchMode(mode, animate = true) {
       currentMode = mode;
-      document.querySelectorAll('.mode-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.mode === mode);
+      document.querySelectorAll('.mode-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.mode === mode);
       });
-    }
-
-    function switchMode(mode) {
-      if (tourTimeline) { tourTimeline.kill(); tourTimeline = null; }
-      setModeUI(mode);
       const bpOverlay = document.getElementById('blueprint-overlay');
 
-      if (mode === 'blueprint') {
-        // Slice walls horizontally at 1.25m & fly camera straight overhead!
-        roofCutawayGroup.visible = false;
-        document.getElementById('btn-roof').classList.remove('active');
-        bpOverlay.classList.add('active');
-
-        gsap.to(blueprintClipPlane, { constant: 1.25, duration: 1.1, ease: 'power2.inOut' });
-        gsap.to(camera.position, { x: 0.0, y: 21.5, z: 1.05, duration: 1.3, ease: 'power3.inOut' });
-        gsap.to(controls.target, { x: 0.0, y: 0.0, z: 1.0, duration: 1.3, ease: 'power3.inOut' });
-
-        document.getElementById('ref-img').src = 'renders/cad_elevation_blueprint.png';
-        document.getElementById('compare-render-layer').style.backgroundImage = `url('renders/cad_elevation_blueprint.png')`;
-        document.getElementById('ref-label').textContent = 'DWG A-101 · North Elevation Blueprint';
-      } else if (mode === 'dollhouse') {
-        // Rise walls smoothly from 1.25m to full height (3.95m) & orbit in 3D isometric cutaway!
+      if (mode === 'photoreal' || mode === 'pointcloud') {
         bpOverlay.classList.remove('active');
-        roofCutawayGroup.visible = false;
-        document.getElementById('btn-roof').classList.remove('active');
+        villaGroup.visible = false;
+        photorealGroup.visible = true;
+        scene.background.set('#070709');
 
-        gsap.to(blueprintClipPlane, { constant: 12.0, duration: 1.2, ease: 'power2.out' });
-        gsap.to(camera.position, { x: -9.6, y: 9.6, z: -6.2, duration: 1.4, ease: 'power3.inOut' });
-        gsap.to(controls.target, { x: 0.0, y: 1.2, z: 1.5, duration: 1.4, ease: 'power3.inOut' });
-        updateReferenceCard(currentRoomKey);
-      } else if (mode === 'walk') {
-        bpOverlay.classList.remove('active');
-        roofCutawayGroup.visible = true;
-        document.getElementById('btn-roof').classList.add('active');
-        flyToRoom(currentRoomKey, 1.2);
-      } else if (mode === 'tour') {
-        bpOverlay.classList.remove('active');
-        roofCutawayGroup.visible = true;
-        document.getElementById('btn-roof').classList.add('active');
-        gsap.to(blueprintClipPlane, { constant: 12.0, duration: 0.6 });
+        controls.maxAzimuthAngle = mode === 'pointcloud' ? 1.15 : 0.52;
+        controls.minAzimuthAngle = mode === 'pointcloud' ? -1.15 : -0.52;
+        controls.maxPolarAngle = Math.PI / 2 + (mode === 'pointcloud' ? 0.65 : 0.35);
+        controls.minPolarAngle = Math.PI / 2 - (mode === 'pointcloud' ? 0.65 : 0.38);
 
-        const keys = ['facade', 'pergola', 'courtyard', 'bedroom', 'vanity', 'bathroom'];
-        let step = 0;
-        function nextTourStop() {
-          if (currentMode !== 'tour') return;
-          const k = keys[step % keys.length];
-          step++;
-          const p = ROOM_PRESETS[k];
-          updateReferenceCard(k);
-          if (k === 'vanity') toggleProjector(true);
-          else if (k === 'courtyard') toggleProjector(false);
+        const targetMorph = (mode === 'pointcloud') ? 1.0 : 0.0;
+        const targetZ = (mode === 'pointcloud') ? 11.4 : 10.2;
+        const targetX = (mode === 'pointcloud') ? -2.2 : 0.0;
+        const targetY = (mode === 'pointcloud') ? 1.1 : 0.0;
 
-          tourTimeline = gsap.timeline({ onComplete: nextTourStop });
-          tourTimeline.to(camera.position, { x: p.pos.x, y: p.pos.y, z: p.pos.z, duration: 2.8, ease: 'power2.inOut' }, 0);
-          tourTimeline.to(controls.target, { x: p.target.x, y: p.target.y, z: p.target.z, duration: 2.8, ease: 'power2.inOut' }, 0);
-          tourTimeline.to({}, { duration: 1.8 });
-        }
-        nextTourStop();
-      }
-    }
+        pointCloudMesh.visible = true;
+        photorealMesh.visible = true;
+        triggerScanWave();
 
-    // ============================================================================
-    // 8. LIVE INTERIOR RESTYLE & LIGHTING CONFIGURATOR
-    // ============================================================================
-    const STYLE_PALETTES = {
-      solara: {
-        plaster: 0xF3EFE6,
-        feature: 0xEAE2D3,
-        wood: 0x9C6B43,
-        linen: 0xEFEAE1,
-        throwCol: 0x6F4E37,
-        pool: 0x48A999
-      },
-      emerald: {
-        plaster: 0x1E4D46,
-        feature: 0x163833,
-        wood: 0x5A3821,
-        linen: 0xF4EFE6,
-        throwCol: 0xC87D4B,
-        pool: 0x2DD4BF
-      },
-      wabisabi: {
-        plaster: 0x8C8A84,
-        feature: 0x6E6C66,
-        wood: 0x362F2B,
-        linen: 0xDFDBD2,
-        throwCol: 0x3F3D3A,
-        pool: 0x5F8D8B
-      }
-    };
-
-    function applyInteriorStyle(styleKey) {
-      const p = STYLE_PALETTES[styleKey];
-      if (!p) return;
-      document.querySelectorAll('[data-style]').forEach(b => {
-        b.classList.toggle('active', b.dataset.style === styleKey);
-      });
-      gsap.to(mats.plasterWall.color, { r: ((p.plaster >> 16) & 255) / 255, g: ((p.plaster >> 8) & 255) / 255, b: (p.plaster & 255) / 255, duration: 0.6 });
-      gsap.to(mats.featurePlaster.color, { r: ((p.feature >> 16) & 255) / 255, g: ((p.feature >> 8) & 255) / 255, b: (p.feature & 255) / 255, duration: 0.6 });
-      gsap.to(mats.teakWood.color, { r: ((p.wood >> 16) & 255) / 255, g: ((p.wood >> 8) & 255) / 255, b: (p.wood & 255) / 255, duration: 0.6 });
-      gsap.to(mats.flutedTeak.color, { r: ((p.wood >> 16) & 255) / 255, g: ((p.wood >> 8) & 255) / 255, b: (p.wood & 255) / 255, duration: 0.6 });
-      gsap.to(mats.bedLinenCream.color, { r: ((p.linen >> 16) & 255) / 255, g: ((p.linen >> 8) & 255) / 255, b: (p.linen & 255) / 255, duration: 0.6 });
-      gsap.to(mats.bedThrowBrown.color, { r: ((p.throwCol >> 16) & 255) / 255, g: ((p.throwCol >> 8) & 255) / 255, b: (p.throwCol & 255) / 255, duration: 0.6 });
-      gsap.to(mats.poolWater.color, { r: ((p.pool >> 16) & 255) / 255, g: ((p.pool >> 8) & 255) / 255, b: (p.pool & 255) / 255, duration: 0.6 });
-    }
-
-    function applyTimeOfDay(timeKey) {
-      currentTimeOfDay = timeKey;
-      document.querySelectorAll('[data-time]').forEach(b => {
-        b.classList.toggle('active', b.dataset.time === timeKey);
-      });
-
-      if (timeKey === 'morning') {
-        scene.background.set('#D8E6F2');
-        scene.fog.color.set('#D8E6F2');
-        sunLight.color.set(0xFFE6C2);
-        sunLight.intensity = 2.2;
-        sunLight.position.set(-12, 18, -8);
-        hemiLight.intensity = 0.75;
-        archUpLightLeft.intensity = 0.6;
-        archUpLightRight.intensity = 0.6;
-        poolUnderwaterLight.intensity = 0.5;
-      } else if (timeKey === 'noon') {
-        scene.background.set('#BBE0FA');
-        scene.fog.color.set('#BBE0FA');
-        sunLight.color.set(0xFFFFFF);
-        sunLight.intensity = 2.8;
-        sunLight.position.set(2, 26, -2);
-        hemiLight.intensity = 0.95;
-        archUpLightLeft.intensity = 0.2;
-        archUpLightRight.intensity = 0.2;
-        poolUnderwaterLight.intensity = 0.3;
-      } else if (timeKey === 'night') {
-        scene.background.set('#0B1320');
-        scene.fog.color.set('#0B1320');
-        sunLight.color.set(0x4B6B9E);
-        sunLight.intensity = 0.35;
-        sunLight.position.set(-8, 15, -10);
-        hemiLight.intensity = 0.22;
-        archUpLightLeft.intensity = 3.2;
-        archUpLightRight.intensity = 3.2;
-        poolUnderwaterLight.intensity = 2.8;
-        bedroomPendantLight.intensity = 2.4;
-        pergolaWarmLight.intensity = 2.0;
-      }
-      updateReferenceCard(currentRoomKey);
-    }
-
-    // Motorized Netflix Projector Screen Toggle
-    let projectorOpen = false;
-    function toggleProjector(forceState) {
-      projectorOpen = typeof forceState === 'boolean' ? forceState : !projectorOpen;
-      document.getElementById('btn-projector').classList.toggle('active', projectorOpen);
-      if (projectorOpen) {
-        projectorGroup.visible = true;
-        gsap.to(projectorGroup.scale, { y: 1, duration: 0.7, ease: 'power2.out' });
-      } else {
-        gsap.to(projectorGroup.scale, {
-          y: 0.01,
-          duration: 0.6,
-          ease: 'power2.in',
-          onComplete: () => { projectorGroup.visible = false; }
+        gsap.to(sharedUniforms.uMorphCloud, {
+          value: targetMorph,
+          duration: animate ? 0.85 : 0.01,
+          ease: 'power2.inOut',
+          onUpdate: () => applyMorphValue(sharedUniforms.uMorphCloud.value)
         });
+        gsap.to(camera.position, {
+          x: targetX, y: targetY, z: targetZ,
+          duration: animate ? 0.9 : 0.01,
+          ease: 'power3.out'
+        });
+        gsap.to(controls.target, {
+          x: 0, y: 0, z: 0,
+          duration: animate ? 0.9 : 0.01
+        });
+        rebuildPortals(currentZoneKey);
+
+      } else if (mode === 'blueprint') {
+        photorealGroup.visible = false;
+        villaGroup.visible = true;
+        bpOverlay.classList.add('active');
+        scene.background.set('#141815');
+
+        controls.maxAzimuthAngle = Infinity;
+        controls.minAzimuthAngle = -Infinity;
+        controls.maxPolarAngle = Math.PI / 2;
+        controls.minPolarAngle = 0;
+
+        blueprintClipPlane.constant = 1.25;
+        gsap.to(camera.position, { x: 0.0, y: 21.5, z: 1.05, duration: 1.1, ease: 'power3.inOut' });
+        gsap.to(controls.target, { x: 0.0, y: 0.0, z: 1.0, duration: 1.1, ease: 'power3.inOut' });
+
+      } else if (mode === 'dollhouse') {
+        photorealGroup.visible = false;
+        villaGroup.visible = true;
+        bpOverlay.classList.remove('active');
+        scene.background.set('#181B20');
+
+        controls.maxAzimuthAngle = Infinity;
+        controls.minAzimuthAngle = -Infinity;
+        controls.maxPolarAngle = Math.PI / 2 - 0.05;
+        controls.minPolarAngle = 0.2;
+
+        blueprintClipPlane.constant = 12.0;
+        gsap.to(camera.position, { x: -9.6, y: 9.6, z: -6.2, duration: 1.2, ease: 'power3.inOut' });
+        gsap.to(controls.target, { x: 0.0, y: 1.2, z: 1.5, duration: 1.2, ease: 'power3.inOut' });
       }
     }
 
     // ============================================================================
-    // 9. FIRST-PERSON WASD WALK + CLICK-TO-TELEPORT + UI EVENT LISTENERS
+    // 8. UI EVENT LISTENERS & PARALLAX CONTROLS
     // ============================================================================
-    const keysPressed = {};
-    window.addEventListener('keydown', (e) => {
-      keysPressed[e.code] = true;
-      if (e.key === '1') switchMode('blueprint');
-      if (e.key === '2') switchMode('dollhouse');
-      if (e.key === '3') switchMode('walk');
-      if (e.key === '4') switchMode('tour');
-      if (e.key.toLowerCase() === 'p') toggleProjector();
-      if (e.key.toLowerCase() === 'r') document.getElementById('btn-roof').click();
-      if (e.key === 'Escape') document.getElementById('compare-overlay').classList.remove('active');
-    });
-    window.addEventListener('keyup', (e) => { keysPressed[e.code] = false; });
-
-    // Click on floor to walk/glide there smoothly
-    const raycaster = new THREE.Raycaster();
-    const pointer = new THREE.Vector2();
-    let pointerDownPos = { x: 0, y: 0 };
-
-    renderer.domElement.addEventListener('pointerdown', (e) => {
-      pointerDownPos = { x: e.clientX, y: e.clientY };
-    });
-
-    renderer.domElement.addEventListener('pointerup', (e) => {
-      const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y);
-      if (dist > 5) return; // Was a camera drag, not a click
-
-      pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-      pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
-      raycaster.setFromCamera(pointer, camera);
-      const hits = raycaster.intersectObjects(villaGroup.children, true);
-      if (hits.length > 0) {
-        const hit = hits[0];
-        if (hit.point.y < 0.45 && Math.abs(hit.point.x) < 3.4 && hit.point.z > -8.5 && hit.point.z < 9.0) {
-          if (tourTimeline) { tourTimeline.kill(); tourTimeline = null; }
-          setModeUI('walk');
-          const lookOffset = new THREE.Vector3().subVectors(controls.target, camera.position).normalize().multiplyScalar(2.5);
-          gsap.to(camera.position, {
-            x: hit.point.x,
-            y: 1.62,
-            z: hit.point.z,
-            duration: 0.9,
-            ease: 'power2.out'
-          });
-          gsap.to(controls.target, {
-            x: hit.point.x + lookOffset.x,
-            y: 1.55,
-            z: hit.point.z + lookOffset.z,
-            duration: 0.9,
-            ease: 'power2.out'
-          });
-        }
-      }
-    });
-
-    // Bind UI Buttons
     document.querySelectorAll('.mode-btn').forEach(btn => {
       btn.addEventListener('click', () => switchMode(btn.dataset.mode));
     });
+
     document.querySelectorAll('.room-btn').forEach(btn => {
-      btn.addEventListener('click', () => flyToRoom(btn.dataset.room));
+      btn.addEventListener('click', () => transitionToZone(btn.dataset.room));
     });
-    document.querySelectorAll('.thumb-item').forEach(item => {
-      item.addEventListener('click', () => flyToRoom(item.dataset.room));
+
+    // Morph Slider (Photoreal <-> Point-Cloud)
+    document.getElementById('slider-morph').addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value) / 100;
+      applyMorphValue(val);
     });
+
+    // 3D Depth Extrusion Slider
+    document.getElementById('slider-depth').addEventListener('input', (e) => {
+      const pct = parseFloat(e.target.value);
+      sharedUniforms.uDepthScale.value = (pct / 100) * 3.8;
+      document.getElementById('lbl-depth').textContent = `${Math.round(pct)}%`;
+    });
+
+    // LiDAR Scan Wave Button
+    document.getElementById('btn-scan-wave').addEventListener('click', triggerScanWave);
+
+    // Auto Fly-Through Tour
+    const tourOrder = ['courtyard', 'bedroom', 'vanity', 'bathroom', 'facade', 'pergola'];
+    let tourIdx = 0;
+    document.getElementById('btn-auto-tour').addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      if (autoTourTimer) {
+        clearInterval(autoTourTimer);
+        autoTourTimer = null;
+        btn.style.borderColor = 'rgba(255,255,255,0.18)';
+        btn.querySelector('span').textContent = '🎬 Auto Fly-Through Tour [T]';
+      } else {
+        btn.style.borderColor = '#2DD4BF';
+        btn.querySelector('span').textContent = '⏸ Stop Auto Fly-Through [T]';
+        tourIdx = (tourOrder.indexOf(currentZoneKey) + 1) % tourOrder.length;
+        transitionToZone(tourOrder[tourIdx]);
+        autoTourTimer = setInterval(() => {
+          tourIdx = (tourIdx + 1) % tourOrder.length;
+          transitionToZone(tourOrder[tourIdx]);
+        }, 4200);
+      }
+    });
+
+    // Shader Restyle Buttons
     document.querySelectorAll('[data-style]').forEach(btn => {
-      btn.addEventListener('click', () => applyInteriorStyle(btn.dataset.style));
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-style]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        sharedUniforms.uStyleMode.value = parseInt(btn.dataset.style, 10);
+        triggerScanWave();
+      });
     });
+
+    // Day / Night Render Crossfade
     document.querySelectorAll('[data-time]').forEach(btn => {
-      btn.addEventListener('click', () => applyTimeOfDay(btn.dataset.time));
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-time]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const isNight = btn.dataset.time === 'night';
+        gsap.to(sharedUniforms.uNightMix, {
+          value: isNight ? 1.0 : 0.0,
+          duration: 1.1,
+          ease: 'power2.inOut'
+        });
+      });
     });
 
-    document.getElementById('btn-projector').addEventListener('click', () => toggleProjector());
-    document.getElementById('btn-roof').addEventListener('click', (e) => {
-      roofCutawayGroup.visible = !roofCutawayGroup.visible;
-      e.currentTarget.classList.toggle('active', roofCutawayGroup.visible);
+    // Netflix Projector POV Button
+    document.getElementById('btn-projector').addEventListener('click', () => {
+      transitionToZone('vanity');
     });
 
-    // Split Screen Compare Slider Logic
-    const compareOverlay = document.getElementById('compare-overlay');
-    const compareLayer = document.getElementById('compare-render-layer');
-    const compareHandle = document.getElementById('compare-handle');
-    let draggingSlider = false;
-
-    function openCompareSplit() {
-      // Snap camera to exact room preset first so 3D aligns with the render
-      flyToRoom(currentRoomKey, 0.7);
-      compareOverlay.classList.add('active');
-    }
-
-    document.getElementById('btn-toggle-compare').addEventListener('click', openCompareSplit);
-    document.getElementById('ref-preview-box').addEventListener('click', openCompareSplit);
-    document.getElementById('btn-close-compare').addEventListener('click', () => {
-      compareOverlay.classList.remove('active');
+    // Subtle Mouse Hover 3D Parallax (makes the 2K depth-mesh feel alive instantly)
+    let mouseNX = 0, mouseNY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseNX = (e.clientX / window.innerWidth - 0.5) * 2.0;
+      mouseNY = -(e.clientY / window.innerHeight - 0.5) * 2.0;
     });
 
-    compareHandle.addEventListener('pointerdown', () => { draggingSlider = true; });
-    window.addEventListener('pointerup', () => { draggingSlider = false; });
-    window.addEventListener('pointermove', (e) => {
-      if (!draggingSlider) return;
-      const pct = Math.max(5, Math.min(95, (e.clientX / window.innerWidth) * 100));
-      compareHandle.style.left = `${pct}%`;
-      compareLayer.style.clipPath = `inset(0 0 0 ${pct}%)`;
+    // Keyboard Shortcuts & WASD Camera Push/Orbit
+    const keys = {};
+    window.addEventListener('keydown', (e) => {
+      const k = e.key.toLowerCase();
+      keys[k] = true;
+      if (k === '1') switchMode('photoreal');
+      if (k === '2') switchMode('pointcloud');
+      if (k === '3') switchMode('blueprint');
+      if (k === '4') switchMode('dollhouse');
+      if (k === 'l') triggerScanWave();
+      if (k === 'p') transitionToZone('vanity');
+      if (k === 't') document.getElementById('btn-auto-tour').click();
     });
+    window.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
 
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -1997,52 +1270,40 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
+    // Initialize portals & run an entrance LiDAR scan wave
+    rebuildPortals('courtyard');
+    setTimeout(triggerScanWave, 500);
+
     // ============================================================================
-    // 10. ANIMATION LOOP (WATER RIPPLES + WASD MOVEMENT + TELEMETRY)
+    // 9. RENDER LOOP
     // ============================================================================
     const clock = new THREE.Clock();
-    const posAttr = waterGeo.attributes.position;
-    const telPosEl = document.getElementById('tel-pos');
-
     function animate() {
       requestAnimationFrame(animate);
-      const t = clock.getElapsedTime();
+      const dt = Math.min(clock.getDelta(), 0.05);
+      const elapsed = clock.getElapsedTime();
+      sharedUniforms.uTime.value = elapsed;
 
-      // Gentle pool water wave animation
-      for (let i = 0; i < posAttr.count; i++) {
-        const vx = posAttr.getX(i);
-        const vz = posAttr.getZ(i);
-        posAttr.setY(i, Math.sin(vx * 3.5 + t * 2.2) * 0.012 + Math.cos(vz * 2.8 + t * 1.8) * 0.012);
+      // Subtle mouse-driven 3D parallax offset on the photoreal depth mesh
+      if (currentMode === 'photoreal' || currentMode === 'pointcloud') {
+        photorealGroup.rotation.y += (mouseNX * 0.14 - photorealGroup.rotation.y) * 0.05;
+        photorealGroup.rotation.x += (-mouseNY * 0.08 - photorealGroup.rotation.x) * 0.05;
+
+        // WASD navigation inside the 3D Depth-Mesh / Point-Cloud
+        const speed = 3.6 * dt;
+        if (keys['w'] || keys['arrowup']) camera.position.z = Math.max(5.2, camera.position.z - speed);
+        if (keys['s'] || keys['arrowdown']) camera.position.z = Math.min(14.5, camera.position.z + speed);
+        if (keys['a'] || keys['arrowleft']) camera.position.x = Math.max(-3.5, camera.position.x - speed);
+        if (keys['d'] || keys['arrowright']) camera.position.x = Math.min(3.5, camera.position.x + speed);
       }
-      posAttr.needsUpdate = true;
 
-      // WASD / Arrow Keys First-Person Movement
-      const moveSpeed = 0.075;
-      const forward = new THREE.Vector3();
-      camera.getWorldDirection(forward);
-      forward.y = 0;
-      forward.normalize();
-      const right = new THREE.Vector3().crossVectors(forward, camera.up).normalize();
-
-      const delta = new THREE.Vector3();
-      if (keysPressed['KeyW'] || keysPressed['ArrowUp']) delta.addScaledVector(forward, moveSpeed);
-      if (keysPressed['KeyS'] || keysPressed['ArrowDown']) delta.addScaledVector(forward, -moveSpeed);
-      if (keysPressed['KeyD'] || keysPressed['ArrowRight']) delta.addScaledVector(right, moveSpeed);
-      if (keysPressed['KeyA'] || keysPressed['ArrowLeft']) delta.addScaledVector(right, -moveSpeed);
-
-      if (delta.lengthSq() > 0) {
-        camera.position.add(delta);
-        controls.target.add(delta);
-      }
+      // Gently float ambient dust particles
+      dustParticles.rotation.y = elapsed * 0.03;
 
       controls.update();
-      telPosEl.textContent = `X: ${camera.position.x.toFixed(1)}m, Z: ${camera.position.z.toFixed(1)}m`;
+      updatePortalsScreenPos();
       renderer.render(scene, camera);
     }
-
-    // Start in 3D Dollhouse Cutaway with roof open so user sees all 5 zones immediately
-    roofCutawayGroup.visible = false;
-    document.getElementById('btn-roof').classList.remove('active');
     animate();
   </script>
 </body>
