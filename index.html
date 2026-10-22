@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BLACK RNDR — Dari: Rahime Cube (Solara 123) | 3D Photoreal Walkthrough & Volumetric Splat Engine</title>
+  <title>BLACK RNDR — Dari: Rahime Cube (Solara 123) | World Labs Marble .SPZ Gaussian Splat & 3D Walkthrough</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-obsidian: #08080B;
+      --bg-obsidian: #07070A;
       --panel-bg: rgba(10, 10, 14, 0.84);
       --panel-border: rgba(212, 175, 122, 0.28);
       --accent-brass: #D4AF7A;
@@ -61,7 +61,7 @@
     .project-title { font-size: 13px; font-weight: 600; color: var(--text-bone); }
     .project-sub {
       font-family: var(--font-mono); font-size: 10px;
-      color: var(--accent-brass); letter-spacing: 0.06em;
+      color: var(--accent-emerald); letter-spacing: 0.06em;
     }
 
     .mode-switcher { padding: 5px; gap: 5px; }
@@ -75,10 +75,10 @@
     }
     .mode-btn:hover { color: var(--text-bone); background: rgba(255, 255, 255, 0.06); }
     .mode-btn.active {
-      background: rgba(212, 175, 122, 0.2);
+      background: rgba(212, 175, 122, 0.22);
       border-color: var(--accent-brass);
       color: var(--text-bone);
-      box-shadow: 0 0 18px rgba(212, 175, 122, 0.22);
+      box-shadow: 0 0 18px rgba(212, 175, 122, 0.24);
     }
     .key-hint {
       font-family: var(--font-mono); font-size: 10px;
@@ -89,7 +89,7 @@
     /* Left Navigation Panel */
     .room-nav {
       position: fixed; left: 16px; top: 82px; z-index: 20;
-      width: 248px; background: var(--panel-bg);
+      width: 252px; background: var(--panel-bg);
       backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--panel-border);
       border-radius: 14px; padding: 12px;
@@ -117,8 +117,8 @@
       transform: translateX(2px);
     }
     .room-btn.active {
-      background: rgba(212, 175, 122, 0.22);
-      border-color: var(--accent-brass);
+      background: rgba(45, 212, 191, 0.18);
+      border-color: var(--accent-emerald);
     }
     .room-thumb {
       width: 42px; height: 32px; border-radius: 5px;
@@ -132,18 +132,18 @@
     .walk-help {
       margin-top: 6px; padding: 9px 10px;
       background: rgba(255, 255, 255, 0.03);
-      border: 1px dashed rgba(212, 175, 122, 0.32);
+      border: 1px dashed rgba(45, 212, 191, 0.35);
       border-radius: 8px; font-size: 10.5px; line-height: 1.48;
       color: var(--text-muted);
     }
     .walk-help strong {
-      color: var(--accent-brass); font-family: var(--font-mono); font-size: 10px;
+      color: var(--accent-emerald); font-family: var(--font-mono); font-size: 10px;
     }
 
-    /* Right Control & Mini-Map Card */
+    /* Right Control Card */
     .ref-card {
       position: fixed; right: 16px; top: 82px; z-index: 20;
-      width: 286px; background: var(--panel-bg);
+      width: 288px; background: var(--panel-bg);
       backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--panel-border);
       border-radius: 14px; padding: 12px;
@@ -162,24 +162,8 @@
       background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald);
     }
 
-    .slider-box {
-      display: flex; flex-direction: column; gap: 5px;
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 8px 10px; border-radius: 9px;
-    }
-    .slider-head {
-      display: flex; justify-content: space-between;
-      font-family: var(--font-mono); font-size: 10px; color: var(--text-bone);
-    }
-    .slider-head span:last-child { color: var(--accent-brass); }
-    input[type="range"] {
-      width: 100%; accent-color: var(--accent-brass);
-      cursor: pointer; height: 5px;
-    }
-
     .ref-img-wrap {
-      position: relative; width: 100%; height: 148px;
+      position: relative; width: 100%; height: 146px;
       border-radius: 9px; overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.14);
       background: #121215;
@@ -195,16 +179,17 @@
 
     .action-btn {
       width: 100%;
-      background: linear-gradient(135deg, rgba(212, 175, 122, 0.24), rgba(45, 212, 191, 0.12));
-      border: 1px solid var(--accent-brass);
+      background: linear-gradient(135deg, rgba(45, 212, 191, 0.22), rgba(212, 175, 122, 0.14));
+      border: 1px solid var(--accent-emerald);
       color: var(--text-bone); font-family: var(--font-sans);
       font-size: 11.5px; font-weight: 600;
-      padding: 8px 12px; border-radius: 8px;
+      padding: 9px 12px; border-radius: 8px;
       cursor: pointer; transition: all 0.2s ease;
       display: flex; align-items: center; justify-content: center; gap: 7px;
+      text-decoration: none;
     }
     .action-btn:hover {
-      background: rgba(212, 175, 122, 0.34);
+      background: rgba(45, 212, 191, 0.32);
       transform: translateY(-1px);
     }
 
@@ -217,7 +202,7 @@
       font-family: var(--font-mono); font-size: 10px;
       color: var(--text-muted); display: flex; gap: 12px;
     }
-    .telemetry-pill b { color: var(--accent-brass); }
+    .telemetry-pill b { color: var(--accent-emerald); }
 
     /* Bottom Configurator Dock */
     .bottom-dock {
@@ -310,8 +295,9 @@
   <script type="importmap">
     {
       "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
+        "@sparkjsdev/spark": "https://cdn.jsdelivr.net/npm/@sparkjsdev/spark@0.1.8/dist/spark.module.js",
         "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js"
       }
     }
@@ -339,16 +325,16 @@
       <div class="brand-mark">BLACK RNDR</div>
       <div class="project-meta">
         <div class="project-title">Dari — Rahime Cube (Solara 123)</div>
-        <div class="project-sub">3D WALKABLE PHOTOREAL VILLA & 420K VOLUMETRIC SPLAT ENGINE</div>
+        <div class="project-sub">WORLD LABS MARBLE 1.1 (.SPZ GAUSSIAN SPLAT) + SPARKJS ENGINE</div>
       </div>
     </div>
 
     <div class="mode-switcher">
-      <button class="mode-btn active" data-mode="walk" id="btn-mode-walk">
-        <span class="key-hint">1</span> 3D Walkthrough (WASD + Click)
+      <button class="mode-btn active" data-mode="marble" id="btn-mode-marble">
+        <span class="key-hint">1</span> Marble 3D Splat Walkthrough (.SPZ)
       </button>
-      <button class="mode-btn" data-mode="splat" id="btn-mode-splat">
-        <span class="key-hint">2</span> 3D Volumetric Splat (420K Pts)
+      <button class="mode-btn" data-mode="villa" id="btn-mode-villa">
+        <span class="key-hint">2</span> Multi-Room Villa Walkthrough
       </button>
       <button class="mode-btn" data-mode="dollhouse" id="btn-mode-dollhouse">
         <span class="key-hint">3</span> 3D Dollhouse Orbit
@@ -362,107 +348,100 @@
   <!-- Left Navigation Panel -->
   <aside class="room-nav">
     <div class="nav-section-label">
-      <span>Walkthrough Teleport</span>
-      <span>6 ZONES</span>
+      <span>3D Walkthrough Zones</span>
+      <span>MARBLE + VILLA</span>
     </div>
-    <button class="room-btn" data-room="facade">
-      <img class="room-thumb" src="renders/enhanced_Fasad-01.png" alt="Facade" />
+    <button class="room-btn active" data-room="marble_origin">
+      <img class="room-thumb" src="renders/rahime_marble_pano.jpg" alt="Marble 3D World" />
       <div class="room-info">
-        <span class="room-name">01 · Front Scooter Street</span>
-        <span class="room-zone">Walk Outside Limestone Wall</span>
+        <span class="room-name">00 · Marble .SPZ Gaussian Splat</span>
+        <span class="room-zone">World Labs AI 150K Splat World</span>
       </div>
     </button>
-    <button class="room-btn" data-room="pergola">
-      <img class="room-thumb" src="renders/enhanced_Outdoor-05.png" alt="Pergola" />
-      <div class="room-info">
-        <span class="room-name">02 · Pergola Kitchen & Bar</span>
-        <span class="room-zone">Walk Around Waterfall Island</span>
-      </div>
-    </button>
-    <button class="room-btn active" data-room="courtyard">
+    <button class="room-btn" data-room="courtyard">
       <img class="room-thumb" src="renders/enhanced_Outdoor-01.png" alt="Courtyard" />
       <div class="room-info">
-        <span class="room-name">03 · Pool & 4m Archway</span>
+        <span class="room-name">01 · Pool & 4m Archway</span>
         <span class="room-zone">Walk Through Hollow Arch</span>
       </div>
     </button>
     <button class="room-btn" data-room="bedroom">
       <img class="room-thumb" src="renders/enhanced_Bedroom-01.png" alt="Bedroom" />
       <div class="room-info">
-        <span class="room-name">04 · Master Arch Bedroom</span>
-        <span class="room-zone">Walk Inside Bedroom Suite</span>
+        <span class="room-name">02 · Master Arch Bedroom</span>
+        <span class="room-zone">King Bed & Garden Arch</span>
       </div>
     </button>
     <button class="room-btn" data-room="vanity">
       <img class="room-thumb" src="renders/enhanced_Bedroom-03.png" alt="Vanity" />
       <div class="room-info">
-        <span class="room-name">05 · Vanity & Netflix Screen</span>
+        <span class="room-name">03 · Vanity & Netflix Screen</span>
         <span class="room-zone">Look at Archway Projector</span>
+      </div>
+    </button>
+    <button class="room-btn" data-room="pergola">
+      <img class="room-thumb" src="renders/enhanced_Outdoor-05.png" alt="Pergola" />
+      <div class="room-info">
+        <span class="room-name">04 · Pergola Kitchen & Bar</span>
+        <span class="room-zone">Waterfall Island & 4 Stools</span>
       </div>
     </button>
     <button class="room-btn" data-room="bathroom">
       <img class="room-thumb" src="renders/enhanced_Bathroom-01.png" alt="Bathroom" />
       <div class="room-info">
-        <span class="room-name">06 · Skylight Bathroom</span>
-        <span class="room-zone">Walk Into En-Suite Bath</span>
+        <span class="room-name">05 · Skylight Bathroom</span>
+        <span class="room-zone">Teardrop Mirror & Sink</span>
       </div>
     </button>
 
     <div class="walk-help">
-      <strong>FREE WALKTHROUGH CONTROLS:</strong><br/>
-      • <strong>W A S D / Arrows</strong>: Walk 360° through doors & archway<br/>
-      • <strong>Click Any Floor</strong>: Smoothly walk to point<br/>
+      <strong>MARBLE .SPZ WALKTHROUGH:</strong><br/>
+      • <strong>W A S D / Arrows</strong>: Walk freely in 3D Gaussian Splat<br/>
       • <strong>Drag Mouse</strong>: Look around 360°<br/>
-      • <strong>Q / E</strong>: Elevator Up / Down
+      • <strong>Scroll / Q / E</strong>: Zoom / Elevate<br/>
+      • <strong>Keys 1–4</strong>: Switch Engine Mode
     </div>
   </aside>
 
-  <!-- Right Control & Reference Card -->
+  <!-- Right Control Card -->
   <aside class="ref-card">
     <div class="ref-header">
-      <span class="ref-badge">Volumetric Splat & Render</span>
-      <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);" id="ref-counter">420,000 SPLATS</span>
+      <span class="ref-badge" id="engine-status">MARBLE .SPZ LOADED</span>
+      <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);">SPARKJS v0.1.8</span>
     </div>
 
     <div class="ref-img-wrap">
-      <img id="ref-img" src="renders/enhanced_Outdoor-01.png" alt="BLACK RNDR 2K Render" />
+      <img id="ref-img" src="renders/rahime_marble_pano.jpg" alt="Marble 360 Panorama" />
       <div class="ref-img-tag">
-        <span id="ref-label">Outdoor-01 · Courtyard & Pool</span>
-        <span style="color: var(--accent-brass);">2K TEXTURE</span>
+        <span id="ref-label">Marble 1.1 · Tropical Villa Splat</span>
+        <span style="color: var(--accent-emerald);">.SPZ 3D</span>
       </div>
     </div>
 
-    <div class="slider-box">
-      <div class="slider-head">
-        <span>SOLID 3D ⇄ VOLUMETRIC SPLAT</span>
-        <span id="lbl-splat">25% SPLAT</span>
-      </div>
-      <input type="range" id="slider-splat" min="0" max="100" value="25" />
-    </div>
+    <a class="action-btn" href="https://marble.worldlabs.ai/world/e1530f44-cd5b-43c4-a44c-aed280c7b96c" target="_blank" rel="noopener">
+      <span>🌐 Open Native World Labs Marble Viewer ↗</span>
+    </a>
 
-    <button class="action-btn" id="btn-toggle-compare">
+    <button class="action-btn" id="btn-toggle-compare" style="border-color: var(--accent-brass); background: rgba(212,175,122,0.14);">
       <span>⇄ Split-Compare vs. 2K Render</span>
-    </button>
-    <button class="action-btn" id="btn-auto-tour" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.18);">
-      <span>🎬 Auto Walkthrough Tour [T]</span>
     </button>
   </aside>
 
   <!-- Telemetry Pill -->
   <div class="telemetry-pill">
-    <span>WALK POS: <b id="tel-pos">X: -0.2m, Z: -1.6m</b></span>
-    <span>ZONE: <b id="tel-zone">COURTYARD & POOL</b></span>
+    <span>POS: <b id="tel-pos">X: 0.0m, Y: 0.0m, Z: 0.0m</b></span>
+    <span>ENGINE: <b id="tel-zone">SPARKJS .SPZ GAUSSIAN SPLAT</b></span>
   </div>
 
   <!-- Bottom Configurator Dock -->
   <div class="bottom-dock">
     <div class="dock-group">
-      <span class="dock-label">Interior Restyle:</span>
+      <span class="dock-label">Villa Restyle:</span>
       <button class="pill-btn active" data-style="solara">
-        <span class="swatch-dot" style="background: #E8DFD1;"></span> Solara Original (2K)
+        <span class="swatch-dot" style="background: #E8DFD1;"></span> Solara Original
       </button>
       <button class="pill-btn" data-style="emerald">
-        <span class="swatch-dot" style="background: #1B4D48;"></span> Emerald Resort (Reel Style)
+        <span class="swatch-dot" style="background: #1B4D48;"></span> Emerald Resort
       </button>
       <button class="pill-btn" data-style="wabisabi">
         <span class="swatch-dot" style="background: #8B7D6B;"></span> Kyoto Wabi-Sabi
@@ -472,16 +451,15 @@
     <div class="dock-divider"></div>
 
     <div class="dock-group">
-      <span class="dock-label">Lighting:</span>
-      <button class="pill-btn active" data-time="day" id="btn-time-day">☀️ Daylight 2K Textures</button>
-      <button class="pill-btn" data-time="night" id="btn-time-night">🌙 Night 2K Textures</button>
+      <span class="dock-label">Time:</span>
+      <button class="pill-btn active" data-time="day">☀️ Daylight</button>
+      <button class="pill-btn" data-time="night">🌙 Night Ambience</button>
     </div>
 
     <div class="dock-divider"></div>
 
     <div class="dock-group">
-      <button class="pill-btn" id="btn-projector">🎬 Drop Netflix Screen [P]</button>
-      <button class="pill-btn" id="btn-roof">🏠 Roof Cutaway [R]</button>
+      <button class="pill-btn" id="btn-reset-origin">🎯 Reset Camera [Space]</button>
     </div>
   </div>
 
@@ -497,793 +475,315 @@
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { SplatMesh } from '@sparkjsdev/spark';
     import gsap from 'gsap';
 
     // ============================================================================
-    // 1. SCENE, CAMERA, RENDERER & FIRST-PERSON WALKTHROUGH CONTROLS
+    // 1. SCENE, CAMERA & RENDERER
     // ============================================================================
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#C8DFEE');
-    scene.fog = new THREE.FogExp2('#C8DFEE', 0.012);
+    scene.background = new THREE.Color('#080A0F');
 
-    const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.08, 140);
-    // Start inside the Courtyard looking directly at the 4.0m Semicircular Archway & Pool!
-    camera.position.set(-0.25, 1.55, -1.65);
+    const camera = new THREE.PerspectiveCamera(62, window.innerWidth / window.innerHeight, 0.05, 160);
+    camera.position.set(0, 0, 0.35);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
     renderer.localClippingEnabled = true;
     container.appendChild(renderer.domElement);
 
-    const blueprintClipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 15.0);
+    const blueprintClipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 20.0);
     renderer.clippingPlanes = [blueprintClipPlane];
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.07;
-    controls.target.set(0.1, 1.48, 2.8);
-    controls.maxPolarAngle = Math.PI - 0.15;
-    controls.minDistance = 0.1;
+    controls.target.set(0, 0, -1.2);
+    controls.minDistance = 0.05;
     controls.maxDistance = 42;
 
     // ============================================================================
-    // 2. LOAD PERSPECTIVE-UNWARPED 2K PHOTOREAL TEXTURES FROM BLACK RNDR RENDERS
+    // 2. WORLD LABS MARBLE 1.1 .SPZ GAUSSIAN SPLAT + 360° EQUIRECTANGULAR PANO
+    //    Powered by official @sparkjsdev/spark SplatMesh!
     // ============================================================================
+    const marbleGroup = new THREE.Group();
+    scene.add(marbleGroup);
+
     const texLoader = new THREE.TextureLoader();
-    function loadPhotorealTex(url, repeatX = 1, repeatY = 1) {
-      const t = texLoader.load(url);
-      t.colorSpace = THREE.SRGBColorSpace;
-      if (repeatX > 1 || repeatY > 1) {
-        t.wrapS = t.wrapT = THREE.RepeatWrapping;
-        t.repeat.set(repeatX, repeatY);
+    const marblePanoTex = texLoader.load('renders/rahime_marble_pano.jpg');
+    marblePanoTex.colorSpace = THREE.SRGBColorSpace;
+    marblePanoTex.mapping = THREE.EquirectangularReflectionMapping;
+
+    // 360° Equirectangular Sky Sphere surrounding the .spz Gaussian Splat world
+    const panoSphereGeo = new THREE.SphereGeometry(28, 64, 48);
+    panoSphereGeo.scale(-1, 1, 1);
+    const panoSphereMat = new THREE.MeshBasicMaterial({ map: marblePanoTex });
+    const panoSphere = new THREE.Mesh(panoSphereGeo, panoSphereMat);
+    marbleGroup.add(panoSphere);
+
+    // Load the real World Labs Marble .spz 3D Gaussian Splat file!
+    const marbleSplat = new SplatMesh({
+      url: 'renders/rahime_marble_150k.spz',
+      onLoad: () => {
+        document.getElementById('engine-status').textContent = 'MARBLE .SPZ ACTIVE';
       }
-      return t;
-    }
-
-    const TEX = {
-      archDay: loadPhotorealTex('renders/tex_arch_day.jpg'),
-      archNight: loadPhotorealTex('renders/tex_arch_night.jpg'),
-      courtyardDay: loadPhotorealTex('renders/tex_courtyard_day.jpg'),
-      courtyardNight: loadPhotorealTex('renders/tex_courtyard_night.jpg'),
-      skyDay: loadPhotorealTex('renders/tex_sky_day.jpg', 2, 1),
-      skyNight: loadPhotorealTex('renders/tex_sky_night.jpg', 2, 1),
-      foliageDay: loadPhotorealTex('renders/tex_foliage_day.jpg', 2, 1),
-      foliageNight: loadPhotorealTex('renders/tex_foliage_night.jpg', 2, 1),
-      bedDay: loadPhotorealTex('renders/tex_bed_day.jpg'),
-      bedNight: loadPhotorealTex('renders/tex_bed_night.jpg'),
-      vanityDay: loadPhotorealTex('renders/tex_vanity_day.jpg'),
-      pergolaDay: loadPhotorealTex('renders/tex_pergola_day.jpg'),
-      facadeDay: loadPhotorealTex('renders/tex_facade_day.jpg'),
-      bathDay: loadPhotorealTex('renders/tex_bath_day.jpg'),
-      bathNight: loadPhotorealTex('renders/tex_bath_night.jpg'),
-      depthCourtyard: texLoader.load('renders/depth_courtyard.png'),
-      depthBedroom: texLoader.load('renders/depth_bedroom.png')
-    };
+    });
+    // In SparkJS / Marble coordinate convention, flip Y/Z if needed or keep standard orientation
+    marbleSplat.quaternion.set(1, 0, 0, 0);
+    marbleGroup.add(marbleSplat);
 
     // ============================================================================
-    // 3. LIGHTING (DAYLIGHT & NIGHT ARCHITECTURAL GLOW)
-    // ============================================================================
-    const hemiLight = new THREE.HemisphereLight(0xFFFDF8, 0x9E8F7C, 1.35);
-    scene.add(hemiLight);
-
-    const sunLight = new THREE.DirectionalLight(0xFFF5E1, 1.9);
-    sunLight.position.set(-8, 16, -6);
-    sunLight.castShadow = true;
-    sunLight.shadow.mapSize.set(2048, 2048);
-    sunLight.shadow.camera.left = -12;
-    sunLight.shadow.camera.right = 12;
-    sunLight.shadow.camera.top = 14;
-    sunLight.shadow.camera.bottom = -14;
-    sunLight.shadow.bias = -0.0005;
-    scene.add(sunLight);
-
-    // Warm interior & pool point lights for realistic walk-through ambiance
-    const archGlowLeft = new THREE.PointLight(0xFFB86C, 1.8, 7.5);
-    archGlowLeft.position.set(-2.1, 0.65, 2.65);
-    scene.add(archGlowLeft);
-
-    const archGlowRight = new THREE.PointLight(0xFFB86C, 1.8, 7.5);
-    archGlowRight.position.set(2.1, 0.65, 2.65);
-    scene.add(archGlowRight);
-
-    const bedroomLight = new THREE.PointLight(0xFFD29D, 2.2, 10.0);
-    bedroomLight.position.set(0, 3.1, 5.0);
-    scene.add(bedroomLight);
-
-    const poolUnderwaterLight = new THREE.PointLight(0x2DD4BF, 1.6, 8.0);
-    poolUnderwaterLight.position.set(1.95, 0.4, 0.2);
-    scene.add(poolUnderwaterLight);
-
-    // ============================================================================
-    // 4. CAMERA-PROJECTED PHOTOREAL 3D VILLA (7.20M x 18.0M WALKABLE WORLD)
+    // 3. MULTI-ROOM WALKABLE VILLA + DOLLHOUSE + 2D BLUEPRINT GROUP
     // ============================================================================
     const solidVillaGroup = new THREE.Group();
+    solidVillaGroup.visible = false;
     scene.add(solidVillaGroup);
 
     const roofCutawayGroup = new THREE.Group();
     solidVillaGroup.add(roofCutawayGroup);
 
-    const walkableFloors = [];
+    const hemiLight = new THREE.HemisphereLight(0xFFFDF8, 0x9E8F7C, 1.35);
+    scene.add(hemiLight);
+    const sunLight = new THREE.DirectionalLight(0xFFF5E1, 1.9);
+    sunLight.position.set(-8, 16, -6);
+    scene.add(sunLight);
 
-    // 4.0 Surrounding 360° Tropical Palm & Sky Panorama Cylinder (from actual render!)
-    const skyCylGeo = new THREE.CylinderGeometry(28, 28, 22, 48, 1, true);
-    skyCylGeo.scale(-1, 1, 1);
-    const skyCylMat = new THREE.MeshBasicMaterial({ map: TEX.skyDay, side: THREE.DoubleSide });
-    const skyCyl = new THREE.Mesh(skyCylGeo, skyCylMat);
-    skyCyl.position.set(0, 8.5, 1.0);
-    solidVillaGroup.add(skyCyl);
+    function loadTex(url) {
+      const t = texLoader.load(url);
+      t.colorSpace = THREE.SRGBColorSpace;
+      return t;
+    }
 
-    // Surrounding Ground Plane
-    const outerGround = new THREE.Mesh(
-      new THREE.PlaneGeometry(70, 70),
-      new THREE.MeshStandardMaterial({ color: 0x293524, roughness: 0.95 })
-    );
-    outerGround.rotation.x = -Math.PI / 2;
-    outerGround.position.y = -0.04;
-    outerGround.receiveShadow = true;
-    scene.add(outerGround);
-
-    // Materials mapped with actual 2K Render Textures!
-    const mats = {
-      archWall: new THREE.MeshStandardMaterial({
-        map: TEX.archDay,
-        bumpMap: TEX.archDay,
-        bumpScale: 0.025,
-        roughness: 0.72
-      }),
-      courtyardFloor: new THREE.MeshStandardMaterial({
-        map: TEX.courtyardDay,
-        bumpMap: TEX.courtyardDay,
-        bumpScale: 0.03,
-        roughness: 0.78
-      }),
-      foliageWall: new THREE.MeshStandardMaterial({
-        map: TEX.foliageDay,
-        bumpMap: TEX.foliageDay,
-        bumpScale: 0.05,
-        roughness: 0.8
-      }),
-      bedroomHeadboard: new THREE.MeshStandardMaterial({
-        map: TEX.bedDay,
-        bumpMap: TEX.bedDay,
-        bumpScale: 0.03,
-        roughness: 0.75
-      }),
-      vanityWall: new THREE.MeshStandardMaterial({
-        map: TEX.vanityDay,
-        roughness: 0.65
-      }),
-      pergolaWall: new THREE.MeshStandardMaterial({
-        map: TEX.pergolaDay,
-        roughness: 0.7
-      }),
-      facadeWall: new THREE.MeshStandardMaterial({
-        map: TEX.facadeDay,
-        roughness: 0.75
-      }),
-      bathroomWall: new THREE.MeshStandardMaterial({
-        map: TEX.bathDay,
-        roughness: 0.6
-      }),
-      plasterTint: new THREE.MeshStandardMaterial({
-        color: 0xEFEAE1,
-        roughness: 0.72
-      }),
-      teakWood: new THREE.MeshStandardMaterial({
-        color: 0x7A5232,
-        roughness: 0.5
-      }),
-      bedLinen: new THREE.MeshStandardMaterial({
-        color: 0xF2EDE4,
-        roughness: 0.82
-      }),
-      bedThrow: new THREE.MeshStandardMaterial({
-        color: 0x5C3D28,
-        roughness: 0.85
-      })
+    const TEX = {
+      archDay: loadTex('renders/tex_arch_day.jpg'),
+      archNight: loadTex('renders/tex_arch_night.jpg'),
+      courtyardDay: loadTex('renders/tex_courtyard_day.jpg'),
+      courtyardNight: loadTex('renders/tex_courtyard_night.jpg'),
+      foliageDay: loadTex('renders/tex_foliage_day.jpg'),
+      bedDay: loadTex('renders/tex_bed_day.jpg'),
+      vanityDay: loadTex('renders/tex_vanity_day.jpg'),
+      pergolaDay: loadTex('renders/tex_pergola_day.jpg'),
+      facadeDay: loadTex('renders/tex_facade_day.jpg'),
+      bathDay: loadTex('renders/tex_bath_day.jpg')
     };
 
-    function addWalkFloor(w, d, mat, x, y, z) {
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d, 32, 32), mat);
-      m.rotation.x = -Math.PI / 2;
-      m.position.set(x, y, z);
-      m.receiveShadow = true;
-      solidVillaGroup.add(m);
-      walkableFloors.push(m);
-      return m;
-    }
+    const mats = {
+      archWall: new THREE.MeshStandardMaterial({ map: TEX.archDay, roughness: 0.72 }),
+      courtyardFloor: new THREE.MeshStandardMaterial({ map: TEX.courtyardDay, roughness: 0.78 }),
+      foliageWall: new THREE.MeshStandardMaterial({ map: TEX.foliageDay, roughness: 0.8 }),
+      bedroomHeadboard: new THREE.MeshStandardMaterial({ map: TEX.bedDay, roughness: 0.75 }),
+      vanityWall: new THREE.MeshStandardMaterial({ map: TEX.vanityDay, roughness: 0.65 }),
+      pergolaWall: new THREE.MeshStandardMaterial({ map: TEX.pergolaDay, roughness: 0.7 }),
+      facadeWall: new THREE.MeshStandardMaterial({ map: TEX.facadeDay, roughness: 0.75 }),
+      bathroomWall: new THREE.MeshStandardMaterial({ map: TEX.bathDay, roughness: 0.6 }),
+      plasterTint: new THREE.MeshStandardMaterial({ color: 0xEFEAE1, roughness: 0.72 }),
+      teakWood: new THREE.MeshStandardMaterial({ color: 0x7A5232, roughness: 0.5 }),
+      bedLinen: new THREE.MeshStandardMaterial({ color: 0xF2EDE4, roughness: 0.82 }),
+      bedThrow: new THREE.MeshStandardMaterial({ color: 0x5C3D28, roughness: 0.85 }),
+      poolWater: new THREE.MeshStandardMaterial({ color: 0x1E8A7A, roughness: 0.15, metalness: 0.1 })
+    };
 
     function addMeshBox(parent, w, h, d, mat, x, y, z) {
       const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
       m.position.set(x, y, z);
-      m.castShadow = true;
-      m.receiveShadow = true;
       parent.add(m);
       return m;
     }
 
-    // --- ZONE 1: FRONT STREET & LIMESTONE SCOOTER FACADE (Z = -9.2 to -6.8) ---
-    addWalkFloor(10.0, 2.6, new THREE.MeshStandardMaterial({ color: 0x4A4845, roughness: 0.9 }), 0, 0.01, -8.1);
-    // Front Limestone Facade Wall mapped with actual `enhanced_Fasad-01.png` texture!
-    // Left doorway opening at X = -2.4 so user can walk right through!
-    addMeshBox(solidVillaGroup, 5.2, 2.95, 0.26, mats.facadeWall, 1.0, 1.48, -6.75);
-    addMeshBox(solidVillaGroup, 0.8, 2.95, 0.26, mats.facadeWall, -3.2, 1.48, -6.75);
+    // Build full 7.2m x 18.0m Villa for Multi-Room / Dollhouse / Blueprint modes
+    addMeshBox(solidVillaGroup, 7.4, 0.12, 16.5, mats.plasterTint, 0, 0.0, 1.0);
+    const cf = new THREE.Mesh(new THREE.PlaneGeometry(7.2, 5.6), mats.courtyardFloor);
+    cf.rotation.x = -Math.PI / 2; cf.position.set(0, 0.08, 0.1);
+    solidVillaGroup.add(cf);
 
-    // --- ZONE 2: SEMI-OUTDOOR PERGOLA KITCHEN, WATERFALL BAR & LOUNGE (Z = -6.75 to -2.7) ---
-    addWalkFloor(7.2, 4.1, mats.plasterTint, 0, 0.03, -4.7);
-    // North interior kitchen backdrop mapped with `enhanced_Outdoor-05.png`
-    addMeshBox(solidVillaGroup, 5.0, 2.9, 0.18, mats.pergolaWall, 1.0, 1.45, -6.58);
-    // Waterfall Bar Island + 4 Teak Barstools
+    addMeshBox(solidVillaGroup, 5.2, 2.95, 0.26, mats.facadeWall, 1.0, 1.48, -6.75);
+    addMeshBox(solidVillaGroup, 5.0, 2.9, 0.18, mats.pergolaWall, 1.0, 1.45, -6.55);
     addMeshBox(solidVillaGroup, 2.35, 0.96, 0.8, mats.plasterTint, -0.4, 0.5, -4.3);
-    for (let i = 0; i < 4; i++) {
-      addMeshBox(solidVillaGroup, 0.36, 0.66, 0.36, mats.teakWood, -1.25 + i * 0.56, 0.35, -3.55);
-    }
-    // L-Shaped Lounge Sofa on East Pergola
+    for (let i = 0; i < 4; i++) addMeshBox(solidVillaGroup, 0.36, 0.66, 0.36, mats.teakWood, -1.25 + i * 0.56, 0.35, -3.55);
     addMeshBox(solidVillaGroup, 1.95, 0.45, 0.85, mats.bedLinen, 2.45, 0.26, -6.05);
     addMeshBox(solidVillaGroup, 0.85, 0.45, 2.1, mats.bedLinen, 3.05, 0.26, -5.1);
-    // Woven Bamboo Pergola Roof (in roofCutawayGroup)
-    addMeshBox(roofCutawayGroup, 7.2, 0.08, 4.2, mats.teakWood, 0, 3.15, -4.7);
-
-    // --- ZONE 3: WHITE PEBBLE COURTYARD & EMERALD PLUNGE POOL (Z = -2.7 to +2.85) ---
-    // Courtyard Floor mapped directly with perspective-unwarped `tex_courtyard_day.jpg`!
-    const courtyardFloorMesh = addWalkFloor(7.2, 5.6, mats.courtyardFloor, 0, 0.04, 0.1);
-
-    // 5 Raised 3D Stepping Stones along West side so walking feels 3D
-    for (let i = 0; i < 5; i++) {
-      const st = addMeshBox(solidVillaGroup, 1.15, 0.06, 0.62, mats.plasterTint, -2.15, 0.07, -2.0 + i * 0.85);
-      walkableFloors.push(st);
-    }
-    // Timber Pool Deck in front of the 4m Archway
-    const deckMesh = addMeshBox(solidVillaGroup, 4.1, 0.07, 1.05, mats.teakWood, -1.35, 0.08, 2.32);
-    walkableFloors.push(deckMesh);
-
-    // Animated GLSL Emerald Plunge Pool Water Surface (East Courtyard X = +0.55 to +3.45)
-    const waterUniforms = {
-      uTime: { value: 0 },
-      uTex: { value: TEX.courtyardDay }
-    };
-    const poolWaterMat = new THREE.ShaderMaterial({
-      uniforms: waterUniforms,
-      transparent: true,
-      vertexShader: /* glsl */`
-        uniform float uTime;
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          vec3 p = position;
-          p.z += sin(p.x * 4.5 + uTime * 2.4) * 0.025 + cos(p.y * 3.8 + uTime * 1.9) * 0.02;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
-        }
-      `,
-      fragmentShader: /* glsl */`
-        uniform float uTime;
-        varying vec2 vUv;
-        void main() {
-          float caustic = sin(vUv.x * 32.0 + uTime * 2.5) * cos(vUv.y * 28.0 - uTime * 2.1);
-          vec3 baseEmerald = vec3(0.11, 0.52, 0.45);
-          vec3 highlight = vec3(0.28, 0.82, 0.72) * smoothstep(0.2, 0.9, caustic);
-          gl_FragColor = vec4(baseEmerald + highlight * 0.35, 0.84);
-        }
-      `
-    });
-    const poolWaterMesh = new THREE.Mesh(new THREE.PlaneGeometry(2.85, 5.4, 32, 32), poolWaterMat);
-    poolWaterMesh.rotation.x = -Math.PI / 2;
-    poolWaterMesh.position.set(1.98, 0.14, 0.12);
-    solidVillaGroup.add(poolWaterMesh);
-
-    // Floating Cream Daybed at Pool Edge
+    for (let i = 0; i < 5; i++) addMeshBox(solidVillaGroup, 1.15, 0.06, 0.62, mats.plasterTint, -2.15, 0.1, -2.0 + i * 0.85);
+    addMeshBox(solidVillaGroup, 2.85, 0.12, 5.4, mats.poolWater, 1.98, 0.12, 0.12);
     addMeshBox(solidVillaGroup, 1.18, 0.24, 1.5, mats.bedLinen, 1.25, 0.22, 2.08);
-    const bolster = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 1.1, 16), mats.bedLinen);
-    bolster.rotation.z = Math.PI / 2;
-    bolster.position.set(1.25, 0.39, 2.65);
-    solidVillaGroup.add(bolster);
+    addMeshBox(solidVillaGroup, 0.22, 3.2, 9.6, mats.foliageWall, 3.62, 1.6, -2.0);
+    addMeshBox(solidVillaGroup, 0.22, 1.1, 9.6, mats.plasterTint, -3.62, 0.55, -2.0);
 
-    // Lush Photoreal Tropical Foliage Walls along East & West Courtyard Perimeter
-    addMeshBox(solidVillaGroup, 0.22, 3.6, 9.6, mats.foliageWall, 3.62, 1.8, -2.0);
-    addMeshBox(solidVillaGroup, 0.22, 1.25, 9.6, mats.plasterTint, -3.62, 0.62, -2.0);
-    addMeshBox(roofCutawayGroup, 0.22, 2.35, 9.6, mats.foliageWall, -3.62, 2.42, -2.0);
-
-    // --- ZONE 4 & 5: ICONIC 4.0M HOLLOW ARCHWAY WALL & MASTER BEDROOM (Z = +2.85 to +7.15) ---
-    // Build the 7.20m x 3.85m North Archway Wall with a TRUE 4.0m (R = 2.0m) HOLLOW CUTOUT
-    // AND normalize its UVs so `tex_arch_day.jpg` (from enhanced_Outdoor-01.png) maps 1:1!
-    function createPhotorealArchWall(width, height, radius, depth, material) {
-      const shape = new THREE.Shape();
-      shape.moveTo(-width / 2, 0);
-      shape.lineTo(-radius, 0);
-      shape.absarc(0, 0, radius, Math.PI, 0, true);
-      shape.lineTo(width / 2, 0);
-      shape.lineTo(width / 2, height);
-      shape.lineTo(-width / 2, height);
-      shape.closePath();
-
-      const geo = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 48 });
-      // Normalize UVs to [0..1] across width & height so the photo texture fits accurately!
-      const posAttr = geo.attributes.position;
-      const uvAttr = geo.attributes.uv;
-      for (let i = 0; i < posAttr.count; i++) {
-        const vx = posAttr.getX(i);
-        const vy = posAttr.getY(i);
-        uvAttr.setXY(i, (vx + width / 2) / width, vy / height);
-      }
-      uvAttr.needsUpdate = true;
-      const mesh = new THREE.Mesh(geo, material);
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      return mesh;
+    // 4.0m Semicircular Archway Wall
+    const archShape = new THREE.Shape();
+    archShape.moveTo(-3.6, 0); archShape.lineTo(-2.0, 0);
+    archShape.absarc(0, 0, 2.0, Math.PI, 0, true);
+    archShape.lineTo(3.6, 0); archShape.lineTo(3.6, 3.85); archShape.lineTo(-3.6, 3.85);
+    const archGeo = new THREE.ExtrudeGeometry(archShape, { depth: 0.32, bevelEnabled: false, curveSegments: 48 });
+    const posAttr = archGeo.attributes.position;
+    const uvAttr = archGeo.attributes.uv;
+    for (let i = 0; i < posAttr.count; i++) {
+      uvAttr.setXY(i, (posAttr.getX(i) + 3.6) / 7.2, posAttr.getY(i) / 3.85);
     }
+    const archMesh = new THREE.Mesh(archGeo, mats.archWall);
+    archMesh.position.set(0, 0.06, 2.85);
+    solidVillaGroup.add(archMesh);
 
-    const mainArchWall = createPhotorealArchWall(7.2, 3.85, 2.02, 0.34, mats.archWall);
-    mainArchWall.position.set(0, 0.04, 2.85);
-    solidVillaGroup.add(mainArchWall);
-
-    // Timber Arch Frame & Open Sliding Doors (open in the center so user can walk right through!)
-    [-1.98, 1.98].forEach(mx => {
-      addMeshBox(solidVillaGroup, 0.07, 1.85, 0.09, mats.teakWood, mx, 0.96, 3.02);
-    });
-
-    // Motorized Drop-Down Netflix Projector Screen inside the 4.0m Archway
-    function createNetflixCanvasTex() {
-      const c = document.createElement('canvas');
-      c.width = 512; c.height = 288;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#0B0B0E'; ctx.fillRect(0, 0, 512, 288);
-      ctx.fillStyle = '#E50914';
-      ctx.font = 'bold 140px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('N', 256, 148);
-      return new THREE.CanvasTexture(c);
-    }
-    const projectorGroup = new THREE.Group();
-    projectorGroup.position.set(0, 2.65, 3.22);
-    solidVillaGroup.add(projectorGroup);
-    const netflixScreen = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.55, 1.45),
-      new THREE.MeshBasicMaterial({ map: createNetflixCanvasTex(), side: THREE.DoubleSide })
-    );
-    netflixScreen.position.set(0, -0.75, 0);
-    projectorGroup.add(netflixScreen);
-    projectorGroup.scale.y = 0.001;
-    projectorGroup.visible = false;
-
-    // Master Bedroom Floor (Z = +2.85 to +7.15)
-    addWalkFloor(7.2, 4.3, mats.plasterTint, 0, 0.05, 5.0);
-
-    // Master Bedroom South Headboard Wall mapped with `enhanced_Bedroom-01.png` (`tex_bed_day.jpg`)!
-    // Left doorway at X = -2.5 leads into the Skylight Bathroom!
     addMeshBox(solidVillaGroup, 5.1, 3.85, 0.24, mats.bedroomHeadboard, 1.05, 1.95, 7.12);
-    addMeshBox(solidVillaGroup, 0.85, 3.85, 0.24, mats.plasterTint, -3.15, 1.95, 7.12);
-
-    // Master Bedroom West Wall (Fluted Teak Wardrobe & Vanity mapped with `enhanced_Bedroom-03.png`!)
     addMeshBox(solidVillaGroup, 0.28, 3.85, 4.3, mats.vanityWall, -3.52, 1.95, 5.0);
-
-    // Master Bedroom East Wall with Second Semicircular Garden Archway!
-    const eastGardenArch = createPhotorealArchWall(4.3, 3.85, 1.62, 0.26, mats.foliageWall);
-    eastGardenArch.rotation.y = -Math.PI / 2;
-    eastGardenArch.position.set(3.58, 0.04, 5.0);
-    solidVillaGroup.add(eastGardenArch);
-
-    // 3D King Platform Bed in Center-South of Bedroom (X = +0.25, Z = +5.75)
+    addMeshBox(solidVillaGroup, 0.28, 3.85, 4.3, mats.foliageWall, 3.55, 1.95, 5.0);
     addMeshBox(solidVillaGroup, 2.35, 0.34, 2.25, mats.teakWood, 0.25, 0.22, 5.78);
     addMeshBox(solidVillaGroup, 2.15, 0.26, 2.05, mats.bedLinen, 0.25, 0.50, 5.82);
-    addMeshBox(solidVillaGroup, 2.18, 0.08, 0.95, mats.bedThrow, 0.25, 0.64, 5.28);
-    // Pillows
-    [-0.42, 0.42].forEach(px => {
-      addMeshBox(solidVillaGroup, 0.72, 0.18, 0.42, mats.bedLinen, 0.25 + px, 0.70, 6.52);
-    });
-
-    // Woven Rattan Bell Pendant Light hanging above Bed
-    const pendant = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.55, 24, 1, true), mats.teakWood);
-    pendant.position.set(0.25, 2.85, 5.55);
-    solidVillaGroup.add(pendant);
-
-    // Bedroom Roof (in roofCutawayGroup)
-    addMeshBox(roofCutawayGroup, 7.3, 0.16, 4.4, mats.plasterTint, 0, 3.92, 5.0);
-
-    // --- ZONE 6: EN-SUITE SKYLIGHT BATHROOM (Z = +7.15 to +9.25) ---
-    addWalkFloor(7.2, 2.1, mats.plasterTint, 0, 0.05, 8.2);
-    // South Limestone & Teardrop Mirror Bathroom Wall mapped with `enhanced_Bathroom-01.png`!
     addMeshBox(solidVillaGroup, 7.2, 3.85, 0.24, mats.bathroomWall, 0, 1.95, 9.22);
-    addMeshBox(solidVillaGroup, 0.24, 3.85, 2.1, mats.bathroomWall, -3.55, 1.95, 8.2);
-    addMeshBox(solidVillaGroup, 0.24, 3.85, 2.1, mats.bathroomWall, 3.55, 1.95, 8.2);
-    // Floating Live-Edge Teak Counter & Stone Vessel Sink
     addMeshBox(solidVillaGroup, 2.2, 0.12, 0.62, mats.teakWood, 0.2, 0.84, 8.82);
-    const sink = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.19, 0.18, 24), mats.plasterTint);
-    sink.position.set(0.2, 0.99, 8.82);
-    solidVillaGroup.add(sink);
-    // Woven Rattan Skylight Roof (in roofCutawayGroup)
-    addMeshBox(roofCutawayGroup, 7.3, 0.1, 2.15, mats.teakWood, 0, 3.9, 8.2);
 
     // ============================================================================
-    // 5. 420,000 VOLUMETRIC 3D GAUSSIAN SPLAT CLOUD COVERING THE ENTIRE VILLA!
-    //    Sampled directly from the actual 2K BLACK RNDR render pixels in 3D space!
+    // 4. MODE & ZONE SWITCHING
     // ============================================================================
-    const splatGroup = new THREE.Group();
-    scene.add(splatGroup);
+    let currentMode = 'marble';
 
-    const splatUniforms = {
-      uTime: { value: 0 },
-      uSplatOpacity: { value: 0.35 },
-      uPointSize: { value: 4.2 * Math.min(window.devicePixelRatio, 2) }
-    };
-
-    function createVolumetricSplatPlane(texUrl, depthUrl, width, height, segW, segH, pos, rotY = 0, depthExtrude = 1.6) {
-      const geo = new THREE.PlaneGeometry(width, height, segW - 1, segH - 1);
-      const tex = loadPhotorealTex(texUrl);
-      const dTex = texLoader.load(depthUrl);
-
-      const mat = new THREE.ShaderMaterial({
-        uniforms: {
-          uTex: { value: tex },
-          uDepth: { value: dTex },
-          uExtrude: { value: depthExtrude },
-          uTime: splatUniforms.uTime,
-          uOpacity: splatUniforms.uSplatOpacity,
-          uSize: splatUniforms.uPointSize
-        },
-        transparent: true,
-        depthWrite: false,
-        vertexShader: /* glsl */`
-          uniform sampler2D uDepth;
-          uniform float uExtrude;
-          uniform float uTime;
-          uniform float uSize;
-          varying vec2 vUv;
-          float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-          void main() {
-            vUv = uv;
-            float d = texture2D(uDepth, uv).r;
-            vec3 p = position;
-            float rnd = hash(uv);
-            p.z += (d - 0.45) * uExtrude + sin(uTime * 1.3 + rnd * 6.28) * 0.03;
-            p.x += (rnd - 0.5) * 0.035;
-            p.y += (fract(rnd * 17.3) - 0.5) * 0.035;
-            vec4 mvPos = modelViewMatrix * vec4(p, 1.0);
-            gl_Position = projectionMatrix * mvPos;
-            gl_PointSize = uSize * (8.5 / max(0.8, -mvPos.z)) * (0.7 + 0.5 * d);
-          }
-        `,
-        fragmentShader: /* glsl */`
-          uniform sampler2D uTex;
-          uniform float uOpacity;
-          varying vec2 vUv;
-          void main() {
-            vec2 cxy = 2.0 * gl_PointCoord - 1.0;
-            float r2 = dot(cxy, cxy);
-            if (r2 > 1.0) discard;
-            float a = smoothstep(1.0, 0.1, r2) * uOpacity;
-            vec3 col = texture2D(uTex, vUv).rgb;
-            gl_FragColor = vec4(col * 1.08, a);
-          }
-        `
-      });
-
-      const pts = new THREE.Points(geo, mat);
-      pts.position.set(pos[0], pos[1], pos[2]);
-      pts.rotation.y = rotY;
-      splatGroup.add(pts);
-      return pts;
-    }
-
-    // Populate 6 Volumetric 3D Splat Regions (~420,000 3D Splats total) across the Walkable Villa:
-    // 1. Courtyard & 4m Archway Volumetric Splat (70,000 pts)
-    createVolumetricSplatPlane('renders/enhanced_Outdoor-01.png', 'renders/depth_courtyard.png', 7.2, 4.4, 320, 220, [0, 2.1, 2.75], Math.PI, -2.4);
-    // 2. Master Bedroom & Garden Arch Volumetric Splat (70,000 pts)
-    createVolumetricSplatPlane('renders/enhanced_Bedroom-01.png', 'renders/depth_bedroom.png', 7.1, 3.8, 320, 220, [0, 1.95, 6.95], Math.PI, -2.0);
-    // 3. Fluted Teak Vanity & Netflix Screen Volumetric Splat (70,000 pts)
-    createVolumetricSplatPlane('renders/enhanced_Bedroom-03.png', 'renders/depth_vanity.png', 4.3, 3.8, 280, 220, [-3.35, 1.95, 5.0], Math.PI / 2, 1.6);
-    // 4. Pergola Kitchen & Waterfall Bar Volumetric Splat (70,000 pts)
-    createVolumetricSplatPlane('renders/enhanced_Outdoor-05.png', 'renders/depth_pergola.png', 7.1, 3.6, 300, 220, [0, 1.85, -6.45], 0, 2.2);
-    // 5. En-Suite Skylight Bathroom Volumetric Splat (70,000 pts)
-    createVolumetricSplatPlane('renders/enhanced_Bathroom-01.png', 'renders/depth_bathroom.png', 7.0, 3.8, 280, 220, [0, 1.95, 9.10], Math.PI, -1.6);
-    // 6. Front Scooter Facade Volumetric Splat (70,000 pts)
-    createVolumetricSplatPlane('renders/enhanced_Fasad-01.png', 'renders/depth_facade.png', 7.2, 3.6, 280, 220, [0, 1.85, -6.90], Math.PI, -1.8);
-
-    // ============================================================================
-    // 6. CLICK-TO-WALK TELEPORT RING & FIRST-PERSON WALKTHROUGH PRESETS
-    // ============================================================================
-    const cursorRing = new THREE.Mesh(
-      new THREE.RingGeometry(0.18, 0.25, 32),
-      new THREE.MeshBasicMaterial({ color: 0x2DD4BF, side: THREE.DoubleSide, transparent: true, opacity: 0.85 })
-    );
-    cursorRing.rotation.x = -Math.PI / 2;
-    cursorRing.position.y = 0.08;
-    cursorRing.visible = false;
-    scene.add(cursorRing);
-
-    const ROOM_PRESETS = {
-      facade: {
-        name: 'FRONT SCOOTER STREET',
-        label: 'Fasad-01 · Limestone Wall & Street',
-        render: 'renders/enhanced_Fasad-01.png',
-        pos: { x: -0.2, y: 1.55, z: -8.6 },
-        target: { x: 0.0, y: 1.48, z: -6.5 }
-      },
-      pergola: {
-        name: 'PERGOLA KITCHEN & BAR',
-        label: 'Outdoor-05 · Waterfall Island & Stools',
-        render: 'renders/enhanced_Outdoor-05.png',
-        pos: { x: -0.8, y: 1.55, z: -2.4 },
-        target: { x: 0.2, y: 1.38, z: -6.2 }
+    const VILLA_PRESETS = {
+      marble_origin: {
+        mode: 'marble',
+        label: 'Marble 1.1 · Tropical Villa Splat',
+        img: 'renders/rahime_marble_pano.jpg',
+        pos: { x: 0, y: 0, z: 0.35 },
+        target: { x: 0, y: 0, z: -1.2 }
       },
       courtyard: {
-        name: 'COURTYARD & 4M ARCHWAY',
+        mode: 'villa',
         label: 'Outdoor-01 · Emerald Pool & 4m Archway',
-        render: 'renders/enhanced_Outdoor-01.png',
+        img: 'renders/enhanced_Outdoor-01.png',
         pos: { x: -0.25, y: 1.55, z: -1.65 },
         target: { x: 0.1, y: 1.48, z: 2.8 }
       },
       bedroom: {
-        name: 'MASTER ARCH BEDROOM',
+        mode: 'villa',
         label: 'Bedroom-01 · King Bed & Garden Arch',
-        render: 'renders/enhanced_Bedroom-01.png',
+        img: 'renders/enhanced_Bedroom-01.png',
         pos: { x: -1.35, y: 1.52, z: 3.55 },
         target: { x: 0.85, y: 1.38, z: 6.45 }
       },
       vanity: {
-        name: 'TEAK VANITY & NETFLIX POV',
+        mode: 'villa',
         label: 'Bedroom-03 · Vanity & Projector Screen',
-        render: 'renders/enhanced_Bedroom-03.png',
+        img: 'renders/enhanced_Bedroom-03.png',
         pos: { x: 0.65, y: 1.50, z: 6.15 },
         target: { x: -0.55, y: 1.45, z: 2.85 }
       },
+      pergola: {
+        mode: 'villa',
+        label: 'Outdoor-05 · Waterfall Island & Stools',
+        img: 'renders/enhanced_Outdoor-05.png',
+        pos: { x: -0.8, y: 1.55, z: -2.4 },
+        target: { x: 0.2, y: 1.38, z: -6.2 }
+      },
       bathroom: {
-        name: 'SKYLIGHT BATHROOM',
+        mode: 'villa',
         label: 'Bathroom-01 · Teardrop Mirror & Sink',
-        render: 'renders/enhanced_Bathroom-01.png',
+        img: 'renders/enhanced_Bathroom-01.png',
         pos: { x: -1.65, y: 1.55, z: 7.45 },
         target: { x: 0.35, y: 1.42, z: 9.1 }
       }
     };
 
-    let currentMode = 'walk';
-    let currentRoomKey = 'courtyard';
-    let projectorOpen = false;
-    let roofVisible = true;
-    let autoTourTimer = null;
-
-    function applySplatMix(pct) {
-      const val = pct / 100;
-      splatUniforms.uSplatOpacity.value = Math.max(0.0, val);
-      splatGroup.visible = val > 0.01;
-      solidVillaGroup.visible = val < 0.96;
-      document.getElementById('slider-splat').value = Math.round(pct);
-      document.getElementById('lbl-splat').textContent = `${Math.round(pct)}% SPLAT`;
-    }
-    applySplatMix(25);
-
-    function walkToRoom(roomKey, duration = 1.35) {
-      const p = ROOM_PRESETS[roomKey];
-      if (!p) return;
-      currentRoomKey = roomKey;
-
-      document.querySelectorAll('.room-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.room === roomKey);
-      });
-      document.getElementById('ref-img').src = p.render;
-      document.getElementById('compare-render-layer').style.backgroundImage = `url('${p.render}')`;
-      document.getElementById('ref-label').textContent = p.label;
-      document.getElementById('tel-zone').textContent = p.name;
-
-      if (roomKey === 'vanity' && !projectorOpen) toggleProjector(true);
-      if (roomKey === 'courtyard' && projectorOpen) toggleProjector(false);
-
-      if (currentMode === 'blueprint' || currentMode === 'dollhouse') {
-        setMode('walk', false);
-      }
-
-      gsap.to(camera.position, {
-        x: p.pos.x, y: p.pos.y, z: p.pos.z,
-        duration, ease: 'power3.inOut'
-      });
-      gsap.to(controls.target, {
-        x: p.target.x, y: p.target.y, z: p.target.z,
-        duration, ease: 'power3.inOut'
-      });
-    }
-
-    function setMode(mode, moveCam = true) {
+    function setMode(mode) {
       currentMode = mode;
       document.querySelectorAll('.mode-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.mode === mode);
       });
       const bpOverlay = document.getElementById('blueprint-overlay');
 
-      if (mode === 'walk') {
+      if (mode === 'marble') {
         bpOverlay.classList.remove('active');
-        blueprintClipPlane.constant = 15.0;
-        roofCutawayGroup.visible = true;
-        applySplatMix(25);
-        if (moveCam) walkToRoom(currentRoomKey, 1.1);
+        blueprintClipPlane.constant = 20.0;
+        solidVillaGroup.visible = false;
+        marbleGroup.visible = true;
+        document.getElementById('tel-zone').textContent = 'SPARKJS .SPZ GAUSSIAN SPLAT';
+        gsap.to(camera.position, { x: 0, y: 0, z: 0.35, duration: 1.0, ease: 'power3.out' });
+        gsap.to(controls.target, { x: 0, y: 0, z: -1.2, duration: 1.0, ease: 'power3.out' });
 
-      } else if (mode === 'splat') {
+      } else if (mode === 'villa') {
         bpOverlay.classList.remove('active');
-        blueprintClipPlane.constant = 15.0;
-        applySplatMix(92);
-        if (moveCam) walkToRoom(currentRoomKey, 1.1);
+        blueprintClipPlane.constant = 20.0;
+        marbleGroup.visible = false;
+        solidVillaGroup.visible = true;
+        document.getElementById('tel-zone').textContent = 'MULTI-ROOM 3D VILLA';
+        gsap.to(camera.position, { x: -0.25, y: 1.55, z: -1.65, duration: 1.1, ease: 'power3.inOut' });
+        gsap.to(controls.target, { x: 0.1, y: 1.48, z: 2.8, duration: 1.1, ease: 'power3.inOut' });
 
       } else if (mode === 'dollhouse') {
         bpOverlay.classList.remove('active');
-        blueprintClipPlane.constant = 15.0;
-        roofCutawayGroup.visible = false;
-        applySplatMix(15);
-        gsap.to(camera.position, { x: -9.4, y: 9.4, z: -6.0, duration: 1.3, ease: 'power3.inOut' });
-        gsap.to(controls.target, { x: 0.0, y: 1.2, z: 1.5, duration: 1.3, ease: 'power3.inOut' });
+        blueprintClipPlane.constant = 20.0;
+        marbleGroup.visible = false;
+        solidVillaGroup.visible = true;
+        document.getElementById('tel-zone').textContent = '3D DOLLHOUSE CUTAWAY';
+        gsap.to(camera.position, { x: -9.4, y: 9.4, z: -6.0, duration: 1.2, ease: 'power3.inOut' });
+        gsap.to(controls.target, { x: 0.0, y: 1.2, z: 1.5, duration: 1.2, ease: 'power3.inOut' });
 
       } else if (mode === 'blueprint') {
         bpOverlay.classList.add('active');
-        roofCutawayGroup.visible = false;
-        applySplatMix(0);
+        marbleGroup.visible = false;
+        solidVillaGroup.visible = true;
+        document.getElementById('tel-zone').textContent = '2D CAD BLUEPRINT PLAN';
         gsap.to(blueprintClipPlane, { constant: 1.25, duration: 1.0 });
         gsap.to(camera.position, { x: 0.0, y: 21.5, z: 1.05, duration: 1.2, ease: 'power3.inOut' });
         gsap.to(controls.target, { x: 0.0, y: 0.0, z: 1.0, duration: 1.2, ease: 'power3.inOut' });
       }
     }
 
-    // Click-to-Walk Floor Raycasting (Just like Matterport / @theaigeekk Reel!)
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
-    let pointerDownPos = { x: 0, y: 0 };
-
-    renderer.domElement.addEventListener('pointermove', (e) => {
-      if (currentMode !== 'walk' && currentMode !== 'splat') {
-        cursorRing.visible = false;
-        return;
-      }
-      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-      raycaster.setFromCamera(mouse, camera);
-      const hits = raycaster.intersectObjects(walkableFloors, false);
-      if (hits.length > 0) {
-        cursorRing.visible = true;
-        cursorRing.position.set(hits[0].point.x, hits[0].point.y + 0.03, hits[0].point.z);
-      } else {
-        cursorRing.visible = false;
-      }
-    });
-
-    renderer.domElement.addEventListener('pointerdown', (e) => {
-      pointerDownPos = { x: e.clientX, y: e.clientY };
-    });
-
-    renderer.domElement.addEventListener('pointerup', (e) => {
-      const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y);
-      if (dist > 6 || (currentMode !== 'walk' && currentMode !== 'splat')) return;
-
-      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-      raycaster.setFromCamera(mouse, camera);
-      const hits = raycaster.intersectObjects(walkableFloors, false);
-      if (hits.length > 0) {
-        const pt = hits[0].point;
-        const lookVec = new THREE.Vector3().subVectors(controls.target, camera.position);
-        lookVec.y = 0;
-        if (lookVec.lengthSq() < 0.01) lookVec.set(0, 0, 1);
-        lookVec.normalize().multiplyScalar(2.6);
-
-        gsap.to(camera.position, {
-          x: pt.x, y: 1.55, z: pt.z,
-          duration: 0.95, ease: 'power2.out'
-        });
-        gsap.to(controls.target, {
-          x: pt.x + lookVec.x, y: 1.48, z: pt.z + lookVec.z,
-          duration: 0.95, ease: 'power2.out'
-        });
-      }
-    });
-
-    // ============================================================================
-    // 7. UI CONTROLS, RESTYLE PALETTES, DAY/NIGHT TEXTURE SWAP & SPLIT COMPARE
-    // ============================================================================
     document.querySelectorAll('.mode-btn').forEach(btn => {
       btn.addEventListener('click', () => setMode(btn.dataset.mode));
     });
+
     document.querySelectorAll('.room-btn').forEach(btn => {
-      btn.addEventListener('click', () => walkToRoom(btn.dataset.room));
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.room;
+        const p = VILLA_PRESETS[key];
+        if (!p) return;
+        document.querySelectorAll('.room-btn').forEach(b => b.classList.toggle('active', b === btn));
+        document.getElementById('ref-img').src = p.img;
+        document.getElementById('compare-render-layer').style.backgroundImage = `url('${p.img}')`;
+        document.getElementById('ref-label').textContent = p.label;
+
+        if (p.mode !== currentMode) setMode(p.mode);
+        gsap.to(camera.position, { x: p.pos.x, y: p.pos.y, z: p.pos.z, duration: 1.15, ease: 'power3.inOut' });
+        gsap.to(controls.target, { x: p.target.x, y: p.target.y, z: p.target.z, duration: 1.15, ease: 'power3.inOut' });
+      });
     });
 
-    document.getElementById('slider-splat').addEventListener('input', (e) => {
-      applySplatMix(parseFloat(e.target.value));
+    document.getElementById('btn-reset-origin').addEventListener('click', () => {
+      setMode('marble');
     });
 
-    // Interior Restyle Palettes
+    // Style & Lighting buttons
     document.querySelectorAll('[data-style]').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('[data-style]').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const st = btn.dataset.style;
         if (st === 'solara') {
+          panoSphereMat.color.set(0xFFFFFF);
           mats.archWall.color.set(0xFFFFFF);
-          mats.plasterTint.color.set(0xEFEAE1);
-          mats.bedLinen.color.set(0xF2EDE4);
-          mats.bedThrow.color.set(0x5C3D28);
         } else if (st === 'emerald') {
+          panoSphereMat.color.set(0xA6E3D8);
           mats.archWall.color.set(0x98D2C8);
-          mats.plasterTint.color.set(0x1D4E48);
-          mats.bedLinen.color.set(0xD4ECE8);
-          mats.bedThrow.color.set(0x123834);
         } else if (st === 'wabisabi') {
+          panoSphereMat.color.set(0xE2D5C4);
           mats.archWall.color.set(0xD8CFC2);
-          mats.plasterTint.color.set(0x8C8275);
-          mats.bedLinen.color.set(0xC8BEB0);
-          mats.bedThrow.color.set(0x3E3A35);
         }
       });
     });
 
-    // Day / Night 2K Render Texture Swap
     document.querySelectorAll('[data-time]').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('[data-time]').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const isNight = btn.dataset.time === 'night';
+        renderer.toneMappingExposure = isNight ? 0.55 : 1.08;
+        panoSphereMat.color.set(isNight ? 0x52688F : 0xFFFFFF);
         mats.archWall.map = isNight ? TEX.archNight : TEX.archDay;
         mats.courtyardFloor.map = isNight ? TEX.courtyardNight : TEX.courtyardDay;
-        mats.foliageWall.map = isNight ? TEX.foliageNight : TEX.foliageDay;
-        mats.bedroomHeadboard.map = isNight ? TEX.bedNight : TEX.bedDay;
-        mats.bathroomWall.map = isNight ? TEX.bathNight : TEX.bathDay;
-        skyCylMat.map = isNight ? TEX.skyNight : TEX.skyDay;
         mats.archWall.needsUpdate = true;
         mats.courtyardFloor.needsUpdate = true;
-        mats.foliageWall.needsUpdate = true;
-        mats.bedroomHeadboard.needsUpdate = true;
-        mats.bathroomWall.needsUpdate = true;
-        skyCylMat.needsUpdate = true;
-
-        scene.background.set(isNight ? '#090D16' : '#C8DFEE');
-        scene.fog.color.set(isNight ? '#090D16' : '#C8DFEE');
-        hemiLight.intensity = isNight ? 0.35 : 1.35;
-        sunLight.intensity = isNight ? 0.25 : 1.9;
-        archGlowLeft.intensity = isNight ? 3.5 : 1.8;
-        archGlowRight.intensity = isNight ? 3.5 : 1.8;
       });
-    });
-
-    function toggleProjector(forceState) {
-      projectorOpen = (forceState !== undefined) ? forceState : !projectorOpen;
-      document.getElementById('btn-projector').classList.toggle('active', projectorOpen);
-      if (projectorOpen) {
-        projectorGroup.visible = true;
-        gsap.to(projectorGroup.scale, { y: 1.0, duration: 0.7, ease: 'power2.out' });
-      } else {
-        gsap.to(projectorGroup.scale, {
-          y: 0.001, duration: 0.6, ease: 'power2.in',
-          onComplete: () => { projectorGroup.visible = false; }
-        });
-      }
-    }
-    document.getElementById('btn-projector').addEventListener('click', () => toggleProjector());
-
-    document.getElementById('btn-roof').addEventListener('click', (e) => {
-      roofVisible = !roofVisible;
-      roofCutawayGroup.visible = roofVisible;
-      e.currentTarget.classList.toggle('active', !roofVisible);
-    });
-
-    // Auto Walkthrough Tour
-    const tourRooms = ['facade', 'pergola', 'courtyard', 'bedroom', 'vanity', 'bathroom'];
-    let tourIdx = 2;
-    document.getElementById('btn-auto-tour').addEventListener('click', (e) => {
-      const btn = e.currentTarget;
-      if (autoTourTimer) {
-        clearInterval(autoTourTimer);
-        autoTourTimer = null;
-        btn.querySelector('span').textContent = '🎬 Auto Walkthrough Tour [T]';
-      } else {
-        btn.querySelector('span').textContent = '⏸ Stop Walkthrough Tour [T]';
-        tourIdx = (tourIdx + 1) % tourRooms.length;
-        walkToRoom(tourRooms[tourIdx]);
-        autoTourTimer = setInterval(() => {
-          tourIdx = (tourIdx + 1) % tourRooms.length;
-          walkToRoom(tourRooms[tourIdx]);
-        }, 3800);
-      }
     });
 
     // Split Screen Compare
@@ -1308,19 +808,17 @@
     });
 
     // ============================================================================
-    // 8. WASD + ARROW KEYS FREE-ROAM 3D WALKTHROUGH MOVEMENT LOOP
+    // 5. WASD FREE WALKTHROUGH INSIDE THE MARBLE .SPZ GAUSSIAN SPLAT WORLD
     // ============================================================================
     const keys = {};
     window.addEventListener('keydown', (e) => {
       const k = e.key.toLowerCase();
       keys[k] = true;
-      if (k === '1') setMode('walk');
-      if (k === '2') setMode('splat');
+      if (k === '1') setMode('marble');
+      if (k === '2') setMode('villa');
       if (k === '3') setMode('dollhouse');
       if (k === '4') setMode('blueprint');
-      if (k === 'p') toggleProjector();
-      if (k === 'r') document.getElementById('btn-roof').click();
-      if (k === 't') document.getElementById('btn-auto-tour').click();
+      if (e.code === 'Space') setMode('marble');
       if (e.key === 'Escape') compareOverlay.classList.remove('active');
     });
     window.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
@@ -1338,24 +836,20 @@
     function animate() {
       requestAnimationFrame(animate);
       const dt = Math.min(clock.getDelta(), 0.05);
-      const elapsed = clock.getElapsedTime();
-      waterUniforms.uTime.value = elapsed;
-      splatUniforms.uTime.value = elapsed;
+      const speed = (currentMode === 'marble' ? 1.8 : 4.0) * dt;
 
-      // Continuous WASD Free-Walkthrough across the entire 7.2m x 18.0m Villa!
-      const moveSpeed = 4.2 * dt;
       camera.getWorldDirection(fwd);
       fwd.y = 0;
       if (fwd.lengthSq() > 0.001) fwd.normalize();
       right.crossVectors(fwd, camera.up).normalize();
 
       const delta = new THREE.Vector3();
-      if (keys['w'] || keys['arrowup']) delta.addScaledVector(fwd, moveSpeed);
-      if (keys['s'] || keys['arrowdown']) delta.addScaledVector(fwd, -moveSpeed);
-      if (keys['d'] || keys['arrowright']) delta.addScaledVector(right, moveSpeed);
-      if (keys['a'] || keys['arrowleft']) delta.addScaledVector(right, -moveSpeed);
-      if (keys['e']) delta.y += moveSpeed * 0.7;
-      if (keys['q']) delta.y -= moveSpeed * 0.7;
+      if (keys['w'] || keys['arrowup']) delta.addScaledVector(fwd, speed);
+      if (keys['s'] || keys['arrowdown']) delta.addScaledVector(fwd, -speed);
+      if (keys['d'] || keys['arrowright']) delta.addScaledVector(right, speed);
+      if (keys['a'] || keys['arrowleft']) delta.addScaledVector(right, -speed);
+      if (keys['e']) delta.y += speed * 0.7;
+      if (keys['q']) delta.y -= speed * 0.7;
 
       if (delta.lengthSq() > 0) {
         camera.position.add(delta);
@@ -1363,7 +857,7 @@
       }
 
       document.getElementById('tel-pos').textContent =
-        `X: ${camera.position.x.toFixed(1)}m, Z: ${camera.position.z.toFixed(1)}m`;
+        `X: ${camera.position.x.toFixed(2)}m, Y: ${camera.position.y.toFixed(2)}m, Z: ${camera.position.z.toFixed(2)}m`;
 
       controls.update();
       renderer.render(scene, camera);
